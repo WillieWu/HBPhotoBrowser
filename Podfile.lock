@@ -1,0 +1,15 @@
+PODS:
+  - JPFPSStatus (0.1)
+  - SnapKit (3.1.2)
+
+DEPENDENCIES:
+  - JPFPSStatus (~> 0.1)
+  - SnapKit (~> 3.1.2)
+
+SPEC CHECKSUMS:
+  JPFPSStatus: 4467a17488382e4c1700bd9d18c92ae581fd6305
+  SnapKit: 12b24f569cb7c143acc9c22b9d91b23e7b1c84a2
+
+PODFILE CHECKSUM: 1bfffb47ef6006ad893704967e4c833aae96b70b
+
+COCOAPODS: 1.2.0.rc.1
