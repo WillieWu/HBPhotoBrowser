@@ -107,16 +107,15 @@ class HBPreviewController: HBBaseViewController, UICollectionViewDelegate, UICol
         if model.asset?.mediaType == .image {
             
             self.playView.isHidden = true
+            
             _index = indexPath
             
-            DispatchQueue.global().async(execute: {
-                
-                self.list += photos
-    
-                self.tempList += choosePhotos
-            })
+            self.list += photos
+
+            self.tempList += choosePhotos
             
             self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: self.chooseBtn)
+            
             self.title = "\(indexPath.item + 1)" + "/" + "\(self.list.count)"
 
         }else if model.asset?.mediaType == .video {

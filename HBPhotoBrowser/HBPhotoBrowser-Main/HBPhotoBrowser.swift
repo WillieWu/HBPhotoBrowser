@@ -74,7 +74,6 @@ class HBPhotoBrowser: HBBaseViewController, UITableViewDelegate, UITableViewData
                             self.photoList.append(model)
                         }
                         
-                        
                     })
                     
                     let newRoll: PHFetchResult = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: nil)
@@ -96,8 +95,28 @@ class HBPhotoBrowser: HBBaseViewController, UITableViewDelegate, UITableViewData
             }else if status == .denied {
                 print("没有获取到用户授权")
                 
+                DispatchQueue.main.async {
+                    self.requestAuthorizationLable()
+                }
+                
             }
         }
+    }
+    fileprivate func requestAuthorizationLable() {
+        let deniedLable = UILabel()
+        deniedLable.numberOfLines = 0
+        deniedLable.text = "请在iPhone的\"设置-隐私-照片\"选项中，\n允许访问你的手机相册。"
+        deniedLable.textAlignment = .center
+        deniedLable.textColor = UIColor.black
+        self.view.addSubview(deniedLable)
+        
+        deniedLable.snp.makeConstraints { (make) in
+            make.top.equalTo(84)
+//            make.height.equalTo(50)
+            make.left.right.equalToSuperview()
+            
+        }
+        
     }
     //#MARK: 懒加载
    fileprivate lazy var tableView: UITableView = {

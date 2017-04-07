@@ -142,13 +142,13 @@ extension HBPhotosController {
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        if selectPhotos.count > 0 {
-            
-            let alter = UIAlertView(title: nil, message: "已选有图片，不能选择视频", delegate: nil, cancelButtonTitle: "确定")
-            alter.show()
-            
-            return
-        }
+//        if selectPhotos.count > 0 {
+//            
+//            let alter = UIAlertView(title: nil, message: "已选有图片，不能选择视频", delegate: nil, cancelButtonTitle: "确定")
+//            alter.show()
+//            
+//            return
+//        }
         
         let previewVc = HBPreviewController(delegate: self.delegate!)
         previewVc.previewDelegate = self
