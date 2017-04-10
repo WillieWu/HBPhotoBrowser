@@ -117,6 +117,8 @@ class HBPreviewController: HBBaseViewController, UICollectionViewDelegate, UICol
             self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: self.chooseBtn)
             
             self.title = "\(indexPath.item + 1)" + "/" + "\(self.list.count)"
+            
+            self.chooseBtn.isSelected = model.isSelect
 
         }else if model.asset?.mediaType == .video {
             
@@ -194,9 +196,9 @@ class HBPreviewController: HBBaseViewController, UICollectionViewDelegate, UICol
      */
     fileprivate func setChooseBtnStatus(_ result: photo) {
         
-        self.chooseBtn.isSelected = result.isSelect!
-        self.buttonView.leftBtn.isSelected = result.isOriginImage!
-        if result.isOriginImage! {
+        self.chooseBtn.isSelected = result.isSelect
+        self.buttonView.leftBtn.isSelected = result.isOriginImage
+        if result.isOriginImage {
             PHImageManager.default().requestImageData(for: result.asset!, options: nil, resultHandler: { (imageData, string, imageOrientation, dic) in
                 self.buttonView.leftBtn.setTitle("原图" + String((imageData?.count)!/1024) + "kb", for: .selected)
             })
@@ -207,15 +209,15 @@ class HBPreviewController: HBBaseViewController, UICollectionViewDelegate, UICol
         
         let group = getVisibleCell()
         
-        if !group.model.isSelect! && self.checkMaxCount(self.tempList) { return }
+        if !group.model.isSelect && self.checkMaxCount(self.tempList) { return }
         
-        group.model.isSelect = !group.model.isSelect!
+        group.model.isSelect = !group.model.isSelect
         
-        self.chooseBtn.isSelected = group.model.isSelect!
+        self.chooseBtn.isSelected = group.model.isSelect
         
-        if !group.model.isSelect! &&  group.model.isOriginImage!{
-            self.buttonView.leftBtn.isSelected = group.model.isSelect!
-            group.model.isOriginImage = !group.model.isOriginImage!
+        if !group.model.isSelect &&  group.model.isOriginImage {
+            self.buttonView.leftBtn.isSelected = group.model.isSelect
+            group.model.isOriginImage = !group.model.isOriginImage
         }
         
         if self.tempList.contains(group.model) {
@@ -303,9 +305,7 @@ extension HBPreviewController {
         let result = self.list[indexPath.item] 
         cell.addPreview(fillImage: result.asset!)
         cell.delegate = self
-        
-        self.setChooseBtnStatus(result)
-        
+ 
         return cell
     }
      //#MARK: UICollectionViewDelegateFlowLayout
@@ -321,7 +321,13 @@ extension HBPreviewController {
     //MARK: UIScrollerViewDelegate
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         
-        self.title = "\(Int(scrollView.contentOffset.x/scrollView.bounds.size.width) + 1)" + "/" + "\(self.list.count)"
+        let index = Int(scrollView.contentOffset.x/scrollView.bounds.size.width)
+        
+        let result = self.list[index]
+        
+        self.setChooseBtnStatus(result)
+        
+        self.title = "\(index + 1)" + "/" + "\(self.list.count)"
     }
     //#MARK: HBPreviewCollectionCellDelegate
     func getChickCell(_ cell: HBPreviewCollectionCell, tapStatus: TouchStauts) {
@@ -352,23 +358,19 @@ extension HBPreviewController {
         switch state {
         case .originImage:
             
-            if btn.isSelected {
-                
-                let group = getVisibleCell()
-                
-                PHImageManager.default().requestImageData(for: group.model.asset!, options: nil, resultHandler: { (imageData, string, imageOrientation, dic) in
-                    self.buttonView.leftBtn.setTitle("原图" + String((imageData?.count)!/1000) + "kb", for: .selected)
-                })
-                group.model.isOriginImage = !group.model.isOriginImage!
-                if !group.model.isSelect! {//没有选中的时候才选中
-                    group.model.isSelect = !group.model.isSelect!
-                    self.tempList.append(group.model)
-                    fixButtomState()
-                    self.collectionView.reloadItems(at: [group.indexPath])
-                    self.previewDelegate?.fixChooseCell(group.indexPath, model: group.model, choosePhotos: self.tempList)
-                }
+            let group = getVisibleCell()
+            
+            PHImageManager.default().requestImageData(for: group.model.asset!, options: nil, resultHandler: { (imageData, string, imageOrientation, dic) in
+                self.buttonView.leftBtn.setTitle("原图" + String((imageData?.count)!/1000) + "kb", for: .selected)
+            })
+            group.model.isOriginImage = !group.model.isOriginImage
+            if !group.model.isSelect {//没有选中的时候才选中
+                group.model.isSelect = !group.model.isSelect
+                self.tempList.append(group.model)
+                fixButtomState()
+                self.collectionView.reloadItems(at: [group.indexPath])
+                self.previewDelegate?.fixChooseCell(group.indexPath, model: group.model, choosePhotos: self.tempList)
             }
-        
             print("获取原图")
         case .send:
             

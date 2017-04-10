@@ -9,8 +9,8 @@
 import UIKit
 import Photos
 
-let padding = 3
-let line = 4
+let padding = 2
+let line = UIScreen.main.bounds.size.width >= 375 ? 5 : 4
 
 private extension Selector {
     static let chooseBtnChick = #selector(HBCollectionViewCell.chickChooseBtn(_:))
@@ -22,6 +22,7 @@ class HBPhotosController: HBBaseViewController, UICollectionViewDelegate, UIColl
     var assetCollection: PHAssetCollection?
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         
         addCollection()
@@ -142,13 +143,15 @@ extension HBPhotosController {
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-//        if selectPhotos.count > 0 {
-//            
-//            let alter = UIAlertView(title: nil, message: "已选有图片，不能选择视频", delegate: nil, cancelButtonTitle: "确定")
-//            alter.show()
-//            
-//            return
-//        }
+        let model = self.photos[indexPath.item]
+    
+        if selectPhotos.count > 0 && model.asset?.mediaType == .video {
+            
+            let alter = UIAlertView(title: nil, message: "已选有图片，不能选择视频", delegate: nil, cancelButtonTitle: "确定")
+            alter.show()
+            
+            return
+        }
         
         let previewVc = HBPreviewController(delegate: self.delegate!)
         previewVc.previewDelegate = self
@@ -175,10 +178,10 @@ extension HBPhotosController {
     //MARK: HBCollectionViewCellDelegate
     func collectionViewChickStateBtn(_ cell: HBCollectionViewCell, model: photo, indexPath: IndexPath, chickBtn: UIButton) {
         
-        if !model.isSelect! && self.checkMaxCount(self.selectPhotos){ return }
+        if !model.isSelect && self.checkMaxCount(self.selectPhotos){ return }
         
-        model.isSelect = !model.isSelect!
-        chickBtn.isSelected = model.isSelect!
+        model.isSelect = !model.isSelect
+        chickBtn.isSelected = model.isSelect
         
         if self.selectPhotos.contains(model) {
             
@@ -298,7 +301,7 @@ class HBCollectionViewCell: UICollectionViewCell {
         self.videoImageView.snp.makeConstraints { (make) in
             make.width.equalTo(40)
             make.height.equalTo(20)
-            make.left.equalTo(self).offset(5)
+            make.left.equalTo(self).offset(-3)
             make.bottom.equalTo(self).offset(-3)
         }
         
@@ -380,16 +383,13 @@ class HBCollectionViewCell: UICollectionViewCell {
 }
 
 class photo: NSObject {
+    
     var asset: PHAsset?
     /// 是否选中
-    var isSelect: Bool?
+    var isSelect: Bool = false
     /// 是否获取原图
-    var isOriginImage: Bool?
-    override init() {
-        super.init()
-        self.isSelect = false
-        self.isOriginImage = false
-    }
+    var isOriginImage: Bool = false
+   
     
 }
 
