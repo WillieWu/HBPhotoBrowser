@@ -49,7 +49,7 @@ class HBPhotoBrowser: HBBaseViewController, UITableViewDelegate, UITableViewData
     }
     func cancle() {
         
-        self.delegate?.baseViewcontroller!(didCancle: self)
+        self.delegate?.baseViewcontroller(didCancle: self)
         
     }
     func setPhotos() {
@@ -258,6 +258,13 @@ class HBNavgationBrowser: UINavigationController {
 }
 
 @objc protocol HBBaseViewControllerDelegate: NSObjectProtocol {
+    
+    /**
+     取消，返回到根视图
+     
+     - parameter baseVc: baseVc
+     */
+    @objc func baseViewcontroller(didCancle baseVc: HBBaseViewController)
     /**
      选取的所有图片
      
@@ -265,12 +272,13 @@ class HBNavgationBrowser: UINavigationController {
      - parameter photos: [photo]
      */
     @objc optional func baseViewController(_ baseVc: HBBaseViewController, didPickPhotos photos: [photo])
-    /**
-     取消，返回到根视图
-     
-     - parameter baseVc: baseVc
-     */
-    @objc optional func baseViewcontroller(didCancle baseVc: HBBaseViewController)
+    
+    /// 选取的视频
+    ///
+    /// - Parameters:
+    ///   - baseVc: 根控制器
+    ///   - photo: 视频数据
+    @objc optional func baseViewController(_ baseVc: HBBaseViewController, didPickVideo video: photo)
     /**
      选取图片到达上限
      

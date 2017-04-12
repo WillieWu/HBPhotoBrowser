@@ -94,7 +94,7 @@ class HBPhotosController: HBBaseViewController, UICollectionViewDelegate, UIColl
     func cancleTap(){
         
         
-        self.delegate?.baseViewcontroller!(didCancle: self)
+        self.delegate?.baseViewcontroller(didCancle: self)
         
     }
     

@@ -36,7 +36,10 @@ class HBPreviewController: HBBaseViewController, UICollectionViewDelegate, UICol
     var player: AVPlayer?
     var playLayer: AVPlayerLayer?
     var timeObserverToken: Any?
-
+    
+    /// 视频数据
+    var videoModel: photo?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -122,13 +125,15 @@ class HBPreviewController: HBBaseViewController, UICollectionViewDelegate, UICol
 
         }else if model.asset?.mediaType == .video {
             
+            videoModel = model
+            
             self.collectionView.isHidden = true
             self.buttonView.leftBtn.isHidden = true
-            
+            self.buttonView.rightBtn.isEnabled = true
             PHImageManager.default().requestPlayerItem(forVideo: model.asset!, options: nil, resultHandler: { (playerItem, assetDic) in
                 
                 DispatchQueue.main.async {
-                    
+
                     let durationTime = Int((playerItem?.asset.duration.value)!)/Int((playerItem?.asset.duration.timescale)!)
                     
                     self.player = AVPlayer(playerItem: playerItem)
@@ -137,20 +142,21 @@ class HBPreviewController: HBBaseViewController, UICollectionViewDelegate, UICol
                     self.playLayer?.frame = CGRect(x: 0, y: 0, width: self.view.hb_W, height: self.view.hb_H)
                     self.playLayer?.videoGravity = AVLayerVideoGravityResizeAspect
                     self.view.layer.insertSublayer(self.playLayer!, at: 0)
-                    self.timeObserverToken = self.player?.addPeriodicTimeObserver(forInterval: CMTimeMake(1, 1), queue: DispatchQueue.main, using: { (cmtime) in
+                    //监听播放状态
+                    self.timeObserverToken = self.player?.addPeriodicTimeObserver(forInterval: CMTimeMake(1, 1), queue: DispatchQueue.main, using: { [weak self] (cmtime) in
                         
                         let currentTime = Int(cmtime.value)/Int(cmtime.timescale)
                     
                         if currentTime < durationTime { return }
                         //播放完成，跳到开始
-                        self.player?.seek(to: CMTimeMake(0, 1), completionHandler: { (isFinish) in
+                        self?.player?.seek(to: CMTimeMake(0, 1), completionHandler: { (isFinish) in
                             if isFinish {
                                 
-                                self.playView.isHidden = !self.playView.isHidden
-                                self.player?.pause()
+                                self?.playView.isHidden = !(self?.playView.isHidden)!
+                                self?.player?.pause()
                             }
                         })
-                        
+                    
                     })
                 }
                 
@@ -374,7 +380,12 @@ extension HBPreviewController {
             print("获取原图")
         case .send:
             
-            self.delegate?.baseViewController!(self, didPickPhotos: self.tempList)
+            guard videoModel != nil else {
+                self.delegate?.baseViewController!(self, didPickPhotos: self.tempList)
+                return
+            }
+            
+            self.delegate?.baseViewController!(self, didPickVideo: videoModel!)
             
         }
     }

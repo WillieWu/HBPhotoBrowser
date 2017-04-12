@@ -40,7 +40,10 @@ extension ViewController: HBBaseViewControllerDelegate {
         baseVc.dismiss(animated: true, completion: nil)
        
     }
-    
+    func baseViewController(_ baseVc: HBBaseViewController, didPickVideo video: photo) {
+        print("选取视频：" + "\(video)")
+        baseVc.dismiss(animated: true, completion: nil)
+    }
     func baseViewController(_ baseVc: HBBaseViewController, didMaxCount maxCount: Int) {
         
         let errorMessage = "小兄弟，最多选择" + String(maxCount) + "张"
