@@ -9,43 +9,29 @@
 import UIKit
 import Photos
 
-let padding = 2
-let line = UIScreen.main.bounds.size.width >= 375 ? 5 : 4
+let padding: CGFloat = 2.0
+let line: CGFloat = UIScreen.main.bounds.size.width >= 375 ? 5 : 4
 
 private extension Selector {
     static let chooseBtnChick = #selector(HBCollectionViewCell.chickChooseBtn(_:))
-    static let rightBarButtonChick = #selector(HBPhotosController.cancleTap)
 }
 
-class HBPhotosController: HBBaseViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, HBCollectionViewCellDelegate, HBButtomViewDelegate, HBPreviewControllerDelegate {
+class HBPhotosController: HBBaseViewController {
     
-    var assetCollection: PHAssetCollection?
+    var assetCollection: PHAssetCollection? {
     
-    override func viewDidLoad() {
-        
-        super.viewDidLoad()
-        
-        addCollection()
-    
-        addBottomView()
-        
-        self.collectionView.snp.makeConstraints { (make) in
-            make.top.left.right.equalToSuperview()
-            make.bottom.equalTo(-44)
-        }
-        self.buttonView.snp.makeConstraints { (make) in
-            make.top.equalTo(self.collectionView.snp.bottom)
-            make.left.right.bottom.equalToSuperview()
+        didSet{
             
-        }
-        
-        if let collection = assetCollection {
+            guard assetCollection != nil else {
+                print("assetCollection == nil")
+                return
+            }
             
-            self.title = collection.localizedTitle?.chinese()
+            self.title = assetCollection!.localizedTitle?.chinese()
             
             DispatchQueue.global().async(execute: {
-
-                let fetchResult = PHAsset.fetchAssets(in: collection, options: nil)
+                
+                let fetchResult = PHAsset.fetchAssets(in: self.assetCollection!, options: nil)
                 
                 fetchResult.enumerateObjects({ (asset, index, stop) in
                     
@@ -61,43 +47,63 @@ class HBPhotosController: HBBaseViewController, UICollectionViewDelegate, UIColl
                     self.collectionView.reloadData()
                     
                     if self.photos.count > 0{
+                        
                         self.collectionView.scrollToItem(at: IndexPath(item: self.photos.count - 1, section: 0), at: .bottom, animated: false)
+                        
+                    }else{
+                    
+                        self.authorLable.text = "没有任何照片和视频哦！！"
+                        self.view.addSubview(self.authorLable)
+                        
+                        self.authorLable.snp.makeConstraints { (make) in
+                            make.top.equalTo(84)
+                            //            make.height.equalTo(50)
+                            make.left.right.equalToSuperview()
+                            
+                        }
+                    
                     }
-
+                    
                 })
-               
+                
             })
             
+            
         }
+    }
+    
+    override func viewDidLoad() {
+        
+        super.viewDidLoad()
+        
+        addCollection()
+    
+        self.showCancleBtn()
         
     }
-    func addCollection() {
+    fileprivate func addCollection() {
         
         self.view.backgroundColor = UIColor.white
 
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "取消", style: .done, target: self, action: .rightBarButtonChick)
         
         self.collectionView.register(HBCollectionViewCell.self, forCellWithReuseIdentifier: "HBCollectionViewCellID")
         
         view.addSubview(self.collectionView)
         
-        
-    }
-    
-    func addBottomView() {
-        
         self.buttonView.delegate = self
         view.addSubview(self.buttonView)
         
-        
+        self.collectionView.snp.makeConstraints { (make) in
+            make.top.left.right.equalToSuperview()
+            make.bottom.equalTo(-44)
+        }
+        self.buttonView.snp.makeConstraints { (make) in
+            make.top.equalTo(self.collectionView.snp.bottom)
+            make.left.right.bottom.equalToSuperview()
+            
+        }
     }
-    func cancleTap(){
-        
-        
-        self.delegate?.baseViewcontroller(didCancle: self)
-        
-    }
-    
+  
    fileprivate lazy var collectionView: UICollectionView = {
     
         let flowLayout = UICollectionViewFlowLayout()
@@ -117,7 +123,6 @@ class HBPhotosController: HBBaseViewController, UICollectionViewDelegate, UIColl
     fileprivate var buttonView: HBButtomView = {
         
         let buttonView = HBButtomView(frame: .zero)
-        buttonView.leftBtn.isHidden = true
         buttonView.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         return buttonView
     }()
@@ -129,7 +134,7 @@ class HBPhotosController: HBBaseViewController, UICollectionViewDelegate, UIColl
         print("销毁啦-------------------------2");
     }
 }
-extension HBPhotosController {
+extension HBPhotosController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, HBCollectionViewCellDelegate, HBButtomViewDelegate, HBPreviewControllerDelegate {
     //#MARK: UICollectionViewDelegate, UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.photos.count
@@ -144,15 +149,23 @@ extension HBPhotosController {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         let model = self.photos[indexPath.item]
-    
+        
         if selectPhotos.count > 0 && model.asset?.mediaType == .video {
             
-            let alter = UIAlertView(title: nil, message: "已选有图片，不能选择视频", delegate: nil, cancelButtonTitle: "确定")
-            alter.show()
+            let alterVc = UIAlertController(title: nil, message: "已选有图片，不能选择视频", preferredStyle: .alert)
+            
+            let cancleAction = UIAlertAction(title: "确定", style: .cancel) { (action) in
+                print(action.title ?? "标题")
+            }
+            
+            alterVc.addAction(cancleAction)
+            
+            self.present(alterVc, animated: true, completion: nil)
             
             return
+            
         }
-        
+
         let previewVc = HBPreviewController(delegate: self.delegate!)
         previewVc.previewDelegate = self
         previewVc.selectItem(self.photos, indexPath: indexPath, choosePhotos: self.selectPhotos)
@@ -161,19 +174,19 @@ extension HBPhotosController {
     }
     //#MARK: UICollectionViewDelegateFlowLayout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return CGFloat(padding)
+        return padding
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
     
-        return CGFloat(padding)
+        return padding
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        let itemW = (UIScreen.main.bounds.size.width - CGFloat((line + 1) * padding)) / CGFloat(line)
+        let itemW = (UIScreen.main.bounds.size.width - (line + 1) * padding) / line
         return CGSize(width: itemW, height: itemW)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsetsMake(CGFloat(padding), CGFloat(padding), CGFloat(padding), CGFloat(padding))
+        return UIEdgeInsetsMake(padding, padding, padding, padding)
     }
     //MARK: HBCollectionViewCellDelegate
     func collectionViewChickStateBtn(_ cell: HBCollectionViewCell, model: photo, indexPath: IndexPath, chickBtn: UIButton) {
@@ -203,11 +216,9 @@ extension HBPhotosController {
     //MARK: HBButtomViewDelegate
     func buttomViewChick(_ btn: UIButton, state: buttonChick) {
         switch state {
-        case .originImage:
-            print("获取原图")
         case .send:
         
-            self.delegate?.baseViewController!(self, didPickPhotos: self.selectPhotos)
+            self.delegate?.baseViewController!(self, didPickPhotos: self.selectPhotos, isOriginImage: UserDefaults.standard.bool(forKey: KEY_HB_ORIGINIMAGE))
         }
     }
     //MARK: HBPreviewControllerDelegate
@@ -222,7 +233,6 @@ extension HBPhotosController {
         }else{
             self.buttonView.starMidBtnAnimation(String(self.selectPhotos.count))
         }
-        
         
     }
  
@@ -241,38 +251,37 @@ class HBCollectionViewCell: UICollectionViewCell {
     var indexPath: IndexPath?
     
     weak var model:photo? {
-    
+     
         didSet {
         
-            if model != nil {
+            guard model != nil else {
+                return
+            }
                 
-                let requestOptions = PHImageRequestOptions()
-                requestOptions.resizeMode = .fast
+            let requestOptions = PHImageRequestOptions()
+            requestOptions.resizeMode = .fast
+            
+            PHImageManager.default().requestImage(for: model!.asset!, targetSize:imageSize! , contentMode: .aspectFill, options: requestOptions, resultHandler: { (image, imageDic) in
                 
-                PHImageManager.default().requestImage(for: model!.asset!, targetSize:imageSize! , contentMode: .aspectFill, options: requestOptions, resultHandler: { (image, imageDic) in
-                    
-                        self.imageView.image = image
-                    
-                })
-                self.chooseBtn.isSelected = (model?.isSelect)!
+                    self.imageView.image = image
                 
-                if model?.asset?.mediaType == .image {
-                    
-                    self.shadowLayer.colors = color_clear()
-                    self.timeLable.isHidden = true
-                    self.chooseBtn.isHidden = false
-                    self.videoImageView.isHidden = true
-                    
-                }else if model?.asset?.mediaType == .video {
-                    
-                    self.shadowLayer.colors = colorToBlack()
-                    self.timeLable.isHidden = false
-                    self.chooseBtn.isHidden = true
-                    self.videoImageView.isHidden = false
-                    self.timeLable.text = stringTime(Int((model?.asset?.duration)!))
-                    
-                }
+            })
+            self.chooseBtn.isSelected = (model?.isSelect)!
+            
+            if model?.asset?.mediaType == .image {
                 
+                self.shadowLayer.colors = self.color_clear()
+                self.timeLable.isHidden = true
+                self.chooseBtn.isHidden = false
+                self.videoImageView.isHidden = true
+                
+            }else if model?.asset?.mediaType == .video {
+                
+                self.shadowLayer.colors = self.colorToblack()
+                self.timeLable.isHidden = false
+                self.chooseBtn.isHidden = true
+                self.videoImageView.isHidden = false
+                self.timeLable.text = stringTime(Int((model?.asset?.duration)!))
                 
             }
             
@@ -323,24 +332,13 @@ class HBCollectionViewCell: UICollectionViewCell {
         
         self.delegate?.collectionViewChickStateBtn(self, model: self.model!, indexPath: self.indexPath!, chickBtn: getBtn)
     }
-    fileprivate func colorToBlack() -> [CGColor] {
-        return [color_a(r: 0, g: 0, b: 0, a: 0.0).cgColor,
-                color_a(r: 0, g: 0, b: 0, a: 0.1).cgColor,
-                color_a(r: 0, g: 0, b: 0, a: 0.2).cgColor,
-                color_a(r: 0, g: 0, b: 0, a: 0.4).cgColor]
-    }
-    fileprivate func color_clear() -> [CGColor] {
-        return [color_a(r: 0, g: 0, b: 0, a: 0.0).cgColor,
-                color_a(r: 0, g: 0, b: 0, a: 0.0).cgColor,
-                color_a(r: 0, g: 0, b: 0, a: 0.0).cgColor,
-                color_a(r: 0, g: 0, b: 0, a: 0.0).cgColor]
-    }
+  
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
         
     }
     
-    lazy var imageView: UIImageView = {
+    fileprivate lazy var imageView: UIImageView = {
         let icon = UIImageView(frame: .zero)
         icon.layer.masksToBounds = true
         icon.contentMode = .scaleAspectFill
@@ -366,7 +364,7 @@ class HBCollectionViewCell: UICollectionViewCell {
         return layer
     
     }()
-    lazy var videoImageView: UIImageView = {
+    fileprivate lazy var videoImageView: UIImageView = {
         let videoImage = UIImageView(image: UIImage(named: "HBPhotoBrowser.bundle/camera"))
         videoImage.contentMode = .center
         return videoImage
@@ -382,15 +380,27 @@ class HBCollectionViewCell: UICollectionViewCell {
     }()
 }
 
+extension HBCollectionViewCell {
+    
+    func colorToblack() -> [CGColor] {
+        return [color_a(r: 0, g: 0, b: 0, a: 0.0).cgColor,
+                color_a(r: 0, g: 0, b: 0, a: 0.1).cgColor,
+                color_a(r: 0, g: 0, b: 0, a: 0.2).cgColor,
+                color_a(r: 0, g: 0, b: 0, a: 0.4).cgColor]
+    }
+    func color_clear() -> [CGColor] {
+        return [color_a(r: 0, g: 0, b: 0, a: 0.0).cgColor,
+                color_a(r: 0, g: 0, b: 0, a: 0.0).cgColor,
+                color_a(r: 0, g: 0, b: 0, a: 0.0).cgColor,
+                color_a(r: 0, g: 0, b: 0, a: 0.0).cgColor]
+    }
+}
+
 class photo: NSObject {
     
     var asset: PHAsset?
     /// 是否选中
     var isSelect: Bool = false
-    /// 是否获取原图
-    var isOriginImage: Bool = false
    
-    
 }
-
 

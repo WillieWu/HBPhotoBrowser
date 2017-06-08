@@ -28,7 +28,7 @@ protocol HBPreviewControllerDelegate: NSObjectProtocol {
 //FIXME: 1.翻页增加间距
 //FIXME: 2.翻页预览下一张，以免频幕会闪一下
 
-class HBPreviewController: HBBaseViewController, UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout, HBPreviewCollectionCellDelegate,HBButtomViewDelegate  {
+class HBPreviewController: HBBaseViewController {
     
     weak var previewDelegate: HBPreviewControllerDelegate?
     var _index: IndexPath?
@@ -203,12 +203,7 @@ class HBPreviewController: HBBaseViewController, UICollectionViewDelegate, UICol
     fileprivate func setChooseBtnStatus(_ result: photo) {
         
         self.chooseBtn.isSelected = result.isSelect
-        self.buttonView.leftBtn.isSelected = result.isOriginImage
-        if result.isOriginImage {
-            PHImageManager.default().requestImageData(for: result.asset!, options: nil, resultHandler: { (imageData, string, imageOrientation, dic) in
-                self.buttonView.leftBtn.setTitle("原图" + String((imageData?.count)!/1024) + "kb", for: .selected)
-            })
-        }
+        
     }
 
     @objc fileprivate func chickChooseBtn() {
@@ -220,11 +215,6 @@ class HBPreviewController: HBBaseViewController, UICollectionViewDelegate, UICol
         group.model.isSelect = !group.model.isSelect
         
         self.chooseBtn.isSelected = group.model.isSelect
-        
-        if !group.model.isSelect &&  group.model.isOriginImage {
-            self.buttonView.leftBtn.isSelected = group.model.isSelect
-            group.model.isOriginImage = !group.model.isOriginImage
-        }
         
         if self.tempList.contains(group.model) {
             self.tempList.remove(at: self.tempList.index(of: group.model)!)
@@ -247,9 +237,12 @@ class HBPreviewController: HBBaseViewController, UICollectionViewDelegate, UICol
         
         let isBarHide = self.navigationController?.navigationBar.isHidden
         self.navigationController?.setNavigationBarHidden(!isBarHide!, animated: false)
-        UIApplication.shared.setStatusBarHidden(!isBarHide!, with: .fade)
+        self.setNeedsStatusBarAppearanceUpdate()
         self.buttonView.starAlphaAnimation(!isBarHide!)
         
+    }
+    override var prefersStatusBarHidden: Bool {
+        return (self.navigationController?.navigationBar.isHidden)!
     }
     fileprivate lazy var collectionView: UICollectionView = {
     
@@ -300,7 +293,7 @@ class HBPreviewController: HBBaseViewController, UICollectionViewDelegate, UICol
         print("销毁啦-------------------------3");
     }
 }
-extension HBPreviewController {
+extension HBPreviewController: UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout, HBPreviewCollectionCellDelegate,HBButtomViewDelegate {
      //#MARK: UICollectionViewDelegate, UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     
@@ -343,7 +336,7 @@ extension HBPreviewController {
             print("singleTap")
             let isBarHide = self.navigationController?.navigationBar.isHidden
             self.navigationController?.setNavigationBarHidden(!isBarHide!, animated: false)
-            UIApplication.shared.setStatusBarHidden(!isBarHide!, with: .fade)
+            self.setNeedsStatusBarAppearanceUpdate()
             self.buttonView.starAlphaAnimation(!isBarHide!)
             
         case .doubleTap:
@@ -351,7 +344,7 @@ extension HBPreviewController {
             let isBarHide = self.navigationController?.navigationBar.isHidden
             if !isBarHide! {
                 self.navigationController?.setNavigationBarHidden(!isBarHide!, animated: false)
-                UIApplication.shared.setStatusBarHidden(!isBarHide!, with: .fade)
+                self.setNeedsStatusBarAppearanceUpdate()
                 self.buttonView.starAlphaAnimation(!isBarHide!)
             }
            
@@ -362,26 +355,10 @@ extension HBPreviewController {
     //MARK: HBButtomViewDelegate
     func buttomViewChick(_ btn: UIButton, state: buttonChick) {
         switch state {
-        case .originImage:
-            
-            let group = getVisibleCell()
-            
-            PHImageManager.default().requestImageData(for: group.model.asset!, options: nil, resultHandler: { (imageData, string, imageOrientation, dic) in
-                self.buttonView.leftBtn.setTitle("原图" + String((imageData?.count)!/1000) + "kb", for: .selected)
-            })
-            group.model.isOriginImage = !group.model.isOriginImage
-            if !group.model.isSelect {//没有选中的时候才选中
-                group.model.isSelect = !group.model.isSelect
-                self.tempList.append(group.model)
-                fixButtomState()
-                self.collectionView.reloadItems(at: [group.indexPath])
-                self.previewDelegate?.fixChooseCell(group.indexPath, model: group.model, choosePhotos: self.tempList)
-            }
-            print("获取原图")
         case .send:
             
             guard videoModel != nil else {
-                self.delegate?.baseViewController!(self, didPickPhotos: self.tempList)
+                self.delegate?.baseViewController!(self, didPickPhotos: self.tempList, isOriginImage: UserDefaults.standard.bool(forKey: KEY_HB_ORIGINIMAGE))
                 return
             }
             
@@ -451,7 +428,7 @@ public enum TouchStauts : Int {
 
 }
 typealias tapBlock = (_ stauts: TouchStauts) -> Void
-class HBScrollerView: UIScrollView, UIScrollViewDelegate,UIGestureRecognizerDelegate {
+class HBScrollerView: UIScrollView {
     
     fileprivate var myTouch: tapBlock?
     fileprivate var tempScale: CGFloat = 0
@@ -557,7 +534,7 @@ class HBScrollerView: UIScrollView, UIScrollViewDelegate,UIGestureRecognizerDele
     }()
   
 }
-extension HBScrollerView {
+extension HBScrollerView: UIScrollViewDelegate,UIGestureRecognizerDelegate {
     
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return self.bigImageView
@@ -577,7 +554,6 @@ extension HBScrollerView {
 }
 //MARK: 底部工具栏
 public enum buttonChick: Int {
-    case originImage
     case send
 }
 
@@ -592,6 +568,7 @@ class HBButtomView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        self.leftBtn.isSelected = UserDefaults.standard.bool(forKey: KEY_HB_ORIGINIMAGE)
         self.addSubview(self.leftBtn)
         self.addSubview(self.rightBtn)
         self.addSubview(self.midBtn)
@@ -612,8 +589,8 @@ class HBButtomView: UIView {
         self.leftBtn.chick { (btn) in
             
             btn.isSelected = !btn.isSelected
-            self.delegate?.buttomViewChick(btn, state: .originImage)
-            
+        
+            UserDefaults.standard.set(btn.isSelected, forKey: KEY_HB_ORIGINIMAGE)
             
         }
        
@@ -672,6 +649,7 @@ class HBButtomView: UIView {
     @objc fileprivate func sendBtnChick(_ btn: UIButton) {
     
         self.delegate?.buttomViewChick(btn, state: .send)
+        UserDefaults.standard.set(false, forKey: KEY_HB_ORIGINIMAGE)
     
     }
     required init?(coder aDecoder: NSCoder) {

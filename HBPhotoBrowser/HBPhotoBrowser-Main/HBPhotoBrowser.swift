@@ -12,18 +12,18 @@ import SnapKit
 
 
 private extension Selector {
-    static let rightBarButtonCancleChick = #selector(HBPhotoBrowser.cancle)
     static let maxTap = #selector(HBBaseViewControllerDelegate.baseViewController(_:didMaxCount:))
 }
 
 //MARK: HBPhotoBrowser
-class HBPhotoBrowser: HBBaseViewController, UITableViewDelegate, UITableViewDataSource {
+class HBPhotoBrowser: HBBaseViewController {
 
     /// 最大选中数量，默认9张
     var maxPhotos: Int = 9
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         //1.设置默认属性
         addDefault()
         //2.添加TableView
@@ -36,22 +36,18 @@ class HBPhotoBrowser: HBBaseViewController, UITableViewDelegate, UITableViewData
         //3.获取photo
         setPhotos()
         
-        
+        self.showCancleBtn()
     }
     
     func addDefault() {
         
         view.backgroundColor = UIColor.white
         title = "照片";
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "取消", style: UIBarButtonItemStyle.done, target: self, action: .rightBarButtonCancleChick)
         
         
-    }
-    func cancle() {
-        
-        self.delegate?.baseViewcontroller(didCancle: self)
         
     }
+    
     func setPhotos() {
         PHPhotoLibrary.requestAuthorization { (status:PHAuthorizationStatus) in
             if status == .notDetermined {
@@ -96,27 +92,20 @@ class HBPhotoBrowser: HBBaseViewController, UITableViewDelegate, UITableViewData
                 print("没有获取到用户授权")
                 
                 DispatchQueue.main.async {
-                    self.requestAuthorizationLable()
+                    
+                    self.authorLable.text = "请在iPhone的\"设置-隐私-照片\"选项中，\n允许访问你的手机相册。"
+                    self.view.addSubview(self.authorLable)
+                    
+                    self.authorLable.snp.makeConstraints { (make) in
+                        make.top.equalTo(84)
+                        //            make.height.equalTo(50)
+                        make.left.right.equalToSuperview()
+                        
+                    }
                 }
                 
             }
         }
-    }
-    fileprivate func requestAuthorizationLable() {
-        let deniedLable = UILabel()
-        deniedLable.numberOfLines = 0
-        deniedLable.text = "请在iPhone的\"设置-隐私-照片\"选项中，\n允许访问你的手机相册。"
-        deniedLable.textAlignment = .center
-        deniedLable.textColor = UIColor.black
-        self.view.addSubview(deniedLable)
-        
-        deniedLable.snp.makeConstraints { (make) in
-            make.top.equalTo(84)
-//            make.height.equalTo(50)
-            make.left.right.equalToSuperview()
-            
-        }
-        
     }
     //#MARK: 懒加载
    fileprivate lazy var tableView: UITableView = {
@@ -134,11 +123,15 @@ class HBPhotoBrowser: HBBaseViewController, UITableViewDelegate, UITableViewData
         return list
     
     }()
+    
+    
+    
     deinit {
         print("销毁啦-------------------------1");
     }
 }
-extension HBPhotoBrowser {
+
+extension HBPhotoBrowser: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.photoList.count
@@ -165,7 +158,7 @@ extension HBPhotoBrowser {
     
 }
 
-//MARK: HBPhotoBrowserCell
+//MARK: 相册分类列表
 class HBPhotoBrowserCell: UITableViewCell {
     
     var model: photoBrowerModel? {
@@ -244,7 +237,7 @@ class HBPhotoBrowserCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 }
-//MARK: HBNavgationBrowser
+//MARK: 导航控制器
 class HBNavgationBrowser: UINavigationController {
     
     override func viewDidLoad() {
@@ -254,7 +247,9 @@ class HBNavgationBrowser: UINavigationController {
         self.navigationBar.barTintColor = UIColor.black
         self.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
     }
-    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
 }
 
 @objc protocol HBBaseViewControllerDelegate: NSObjectProtocol {
@@ -271,7 +266,7 @@ class HBNavgationBrowser: UINavigationController {
      - parameter baseVc: baseVc
      - parameter photos: [photo]
      */
-    @objc optional func baseViewController(_ baseVc: HBBaseViewController, didPickPhotos photos: [photo])
+    @objc optional func baseViewController(_ baseVc: HBBaseViewController, didPickPhotos photos: [photo], isOriginImage: Bool)
     
     /// 选取的视频
     ///
@@ -287,6 +282,9 @@ class HBNavgationBrowser: UINavigationController {
     @objc optional func baseViewController(_ baseVc: HBBaseViewController, didMaxCount maxCount: Int)
 }
 
+private extension Selector {
+    static let rightBarButtonCancleChick = #selector(HBPhotoBrowser.cancle)
+}
 //#MARK: 基类
 class HBBaseViewController: UIViewController {
     
@@ -300,6 +298,20 @@ class HBBaseViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+    }
+    
+    func showCancleBtn() {
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "取消", style: UIBarButtonItemStyle.done, target: self, action: .rightBarButtonCancleChick)
+    }
+    
+    func cancle() {
+        
+        self.delegate?.baseViewcontroller(didCancle: self)
+        
+    }
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
     /**
      是否到达最大可选数量
@@ -314,7 +326,6 @@ class HBBaseViewController: UIViewController {
         
         if photos.count < topVc.maxPhotos { return false}
         
-        
         if (self.delegate?.responds(to: Selector.maxTap))! {
             self.delegate?.baseViewController!(self, didMaxCount: topVc.maxPhotos)
         }
@@ -322,8 +333,16 @@ class HBBaseViewController: UIViewController {
         
         return true
     }
+    lazy var authorLable: UILabel = {
+        let deniedLable = UILabel()
+        deniedLable.numberOfLines = 0
+        deniedLable.textAlignment = .center
+        deniedLable.textColor = UIColor.black
+        return deniedLable
+        
+    }()
 }
-
+//MARK: 数据模型
 class photoBrowerModel: NSObject {
     
     private let size = CGSize(width: 50, height: 50)

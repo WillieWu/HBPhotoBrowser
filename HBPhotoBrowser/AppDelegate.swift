@@ -15,14 +15,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        
         JPFPSStatus.sharedInstance().open()
-       
+        
         JPFPSStatus.sharedInstance().open { (fpsValue) in
-//            print("JPFPSStatus: " + "\(fpsValue)")
+            //            print("JPFPSStatus: " + "\(fpsValue)")
         }
-        UIApplication.shared.setStatusBarStyle(UIStatusBarStyle.lightContent, animated: true)
-        //😑大
         
         return true
     }

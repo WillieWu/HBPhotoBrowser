@@ -30,26 +30,32 @@ class ViewController: UIViewController {
 extension ViewController: HBBaseViewControllerDelegate {
     
     func baseViewcontroller(didCancle baseVc: HBBaseViewController) {
-        print("取消 - 我要回老家了")
+        print("取消")
         baseVc.dismiss(animated: true, completion: nil)
     
     }
-    
-    func baseViewController(_ baseVc: HBBaseViewController, didPickPhotos photos: [photo]) {
-        print("一共选取" + String(photos.count) + "张图片")
+    func baseViewController(_ baseVc: HBBaseViewController, didPickPhotos photos: [photo], isOriginImage: Bool) {
+        print("一共选取\(photos.count)张图片, 是否原图: \(isOriginImage)")
         baseVc.dismiss(animated: true, completion: nil)
-       
     }
+    
     func baseViewController(_ baseVc: HBBaseViewController, didPickVideo video: photo) {
-        print("选取视频：" + "\(video)")
+        print("选取视频：\(video)")
         baseVc.dismiss(animated: true, completion: nil)
     }
     func baseViewController(_ baseVc: HBBaseViewController, didMaxCount maxCount: Int) {
         
-        let errorMessage = "小兄弟，最多选择" + String(maxCount) + "张"
+        let errorMessage = "小兄弟，最多选择\(maxCount)张"
         
-        let alter = UIAlertView(title: nil, message: errorMessage, delegate: nil, cancelButtonTitle: "确定")
-        alter.show()
+        let alterVc = UIAlertController(title: nil, message: errorMessage, preferredStyle: .alert)
+        
+        let cancleAction = UIAlertAction(title: "确定", style: .cancel) { (action) in
+            print(action.title ?? "标题")
+        }
+
+        alterVc.addAction(cancleAction)
+        
+        baseVc.present(alterVc, animated: true, completion: nil)
     
     }
 }

@@ -15,6 +15,7 @@ func color_a(r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat) -> UIColor {
     return UIColor(red: r/255.0, green: g/255.0, blue: b/255.0, alpha: a)
 }
 let mainColor = color(245,g: 79,b: 85)
+let KEY_HB_ORIGINIMAGE = "KEY_HB_ORIGINIMAGE"
 
 /// 秒数转换成00:00:00
 ///
@@ -76,5 +77,96 @@ extension String {
         return name
     }
 
+}
+
+extension UIView {
+    
+    var hb_X: CGFloat {
+        
+        get{
+            return self.frame.origin.x
+        }
+        set{
+            var originRect = self.frame
+            originRect.origin.x = newValue
+            self.frame = originRect
+        }
+        
+    }
+    var hb_Y: CGFloat {
+        
+        get{
+            return self.frame.origin.y
+        }
+        set{
+            var originRect = self.frame
+            originRect.origin.y = newValue
+            self.frame = originRect
+        }
+        
+    }
+    var hb_W: CGFloat {
+        
+        get{
+            return self.frame.size.width
+        }
+        set{
+            var originRect = self.frame
+            originRect.size.width = newValue
+            self.frame = originRect
+        }
+        
+    }
+    var hb_H: CGFloat {
+        
+        get{
+            return self.frame.size.height
+        }
+        set{
+            var originRect = self.frame
+            originRect.size.height = newValue
+            self.frame = originRect
+        }
+        
+    }
+    var hb_centerX: CGFloat {
+        
+        get{
+            return self.center.x
+        }
+        set{
+            var originCenter = self.center
+            originCenter.x = newValue
+            self.center = originCenter
+        }
+        
+    }
+    var hb_centerY: CGFloat {
+        
+        get{
+            return self.center.y
+        }
+        set{
+            var originCenter = self.center
+            originCenter.y = newValue
+            self.center = originCenter
+        }
+        
+    }
+    
+    func hb_starBoundsAnimation() {
+        
+        self.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+        
+        UIView.animate(withDuration: 0.25, animations: {
+            self.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+        }, completion: { (Finished) in
+            UIView.animate(withDuration: 0.15, animations: {
+                self.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+            })
+        })
+    }
+    
+    
 }
 
