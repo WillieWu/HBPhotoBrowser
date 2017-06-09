@@ -153,6 +153,19 @@ extension UIView {
         }
         
     }
+    var hb_center: CGPoint {
+    
+        get{
+            return self.center
+        }
+        set{
+//            var originCenter = self.center
+//            originCenter = newValue
+            self.center = newValue
+        }
+    
+    }
+    
     
     func hb_starBoundsAnimation() {
         

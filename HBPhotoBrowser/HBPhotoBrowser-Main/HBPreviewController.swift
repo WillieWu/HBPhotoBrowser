@@ -50,25 +50,10 @@ class HBPreviewController: HBBaseViewController {
         
         view.addSubview(self.collectionView)
         
-        self.collectionView.snp.makeConstraints { (make) in
-            make.top.left.bottom.right.equalToSuperview()
-        }
-        
         view.addSubview(self.playView)
-        
-        self.playView.snp.makeConstraints({ (make) in
-            make.size.equalTo(64)
-            make.center.equalToSuperview()
-        })
-        
+
         self.buttonView.delegate = self
         view.addSubview(self.buttonView)
-        
-        self.buttonView.snp.makeConstraints { (make) in
-            make.height.equalTo(44)
-            make.left.bottom.right.equalToSuperview()
-            
-        }
         
         if let index = _index {
             
@@ -81,6 +66,19 @@ class HBPreviewController: HBBaseViewController {
             self.fixButtomState()
         }
        
+    }
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        self.collectionView.frame = self.view.bounds
+        
+        self.playView.hb_W = 64
+        self.playView.hb_H = 64
+        self.playView.hb_center = self.view.center
+        
+        self.buttonView.frame = CGRect(x: 0, y: self.view.hb_H - 44, width: self.view.hb_W, height: 44)
+        
+        
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -400,15 +398,16 @@ class HBPreviewCollectionCell: UICollectionViewCell {
         
         contentView.addSubview(self.scrollerView)
         
-        self.scrollerView.snp.makeConstraints { (make) in
-            make.top.left.bottom.right.equalToSuperview()
-        }
-        
         self.scrollerView.scollerViewDidTouch { (stauts) in
             
             self.delegate?.getChickCell(self, tapStatus: stauts)
             
         }
+    }
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        self.scrollerView.frame = self.bounds
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -571,21 +570,8 @@ class HBButtomView: UIView {
         self.leftBtn.isSelected = UserDefaults.standard.bool(forKey: KEY_HB_ORIGINIMAGE)
         self.addSubview(self.leftBtn)
         self.addSubview(self.rightBtn)
-        self.addSubview(self.midBtn)
         
-        self.leftBtn.snp.makeConstraints { (make) in
-            make.width.equalTo(120)
-            make.top.left.bottom.equalToSuperview()
-        }
-        self.rightBtn.snp.makeConstraints { (make) in
-            make.width.equalTo(self.snp.height)
-            make.top.bottom.equalToSuperview()
-            make.right.equalTo(self).offset(-10)
-        }
-        self.midBtn.snp.makeConstraints { (make) in
-            make.width.height.equalTo(30)
-            make.center.equalToSuperview()
-        }
+        
         self.leftBtn.chick { (btn) in
             
             btn.isSelected = !btn.isSelected
@@ -593,7 +579,15 @@ class HBButtomView: UIView {
             UserDefaults.standard.set(btn.isSelected, forKey: KEY_HB_ORIGINIMAGE)
             
         }
-       
+
+    }
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        self.leftBtn.frame = CGRect(x: 0, y: 0, width: 120, height: self.hb_H)
+        
+        self.rightBtn.frame = CGRect(x: self.hb_W - 100, y: 0, width: 100, height: self.hb_H)
+        
     }
     /**
      清空选中数字提示
@@ -601,8 +595,8 @@ class HBButtomView: UIView {
     func stopMidBtnAnimation() {
         
         self.rightBtn.isEnabled = false
-        self.midBtn.isHidden = true
         
+        self.rightBtn.setTitle("发送", for: UIControlState())
         
     }
     /**
@@ -613,10 +607,9 @@ class HBButtomView: UIView {
     func starMidBtnAnimation(_ title: String) {
         
         self.rightBtn.isEnabled = true
-        self.midBtn.isHidden = false
-        self.midBtn.setTitle(title, for: UIControlState())
         
-        self.midBtn.hb_starBoundsAnimation()
+        self.rightBtn.setTitle("发送 (\(title))", for: UIControlState())
+        
         
     }
     /**
@@ -676,18 +669,7 @@ class HBButtomView: UIView {
         return btn
         
     }()
-    lazy var midBtn: UIButton = {
-        
-        let btn = UIButton()
-        btn.setTitleColor(UIColor.white, for: UIControlState())
-        btn.titleLabel?.font = UIFont.systemFont(ofSize: 14)
-        btn.backgroundColor = mainColor
-        btn.isHidden = true
-        btn.layer.cornerRadius = 15
-        btn.layer.masksToBounds = true
-        return btn
-        
-    }()
+  
 }
 
 //MARK: 自定义Button
@@ -703,9 +685,8 @@ class HBButton: UIButton {
     }
     @objc fileprivate func tap(_ btn: HBButton) {
         
-        if self.chickBlock != nil {
-            self.chickBlock!(self)
-        }
+            self.chickBlock?(self)
+
     }
     
    override init(frame: CGRect) {

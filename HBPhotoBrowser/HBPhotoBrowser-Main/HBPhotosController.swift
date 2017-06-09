@@ -10,7 +10,7 @@ import UIKit
 import Photos
 
 let padding: CGFloat = 2.0
-let line: CGFloat = UIScreen.main.bounds.size.width >= 375 ? 5 : 4
+let line: CGFloat = UIScreen.main.bounds.size.width > 375 ? 5 : 4
 
 private extension Selector {
     static let chooseBtnChick = #selector(HBCollectionViewCell.chickChooseBtn(_:))
@@ -54,13 +54,7 @@ class HBPhotosController: HBBaseViewController {
                     
                         self.authorLable.text = "没有任何照片和视频哦！！"
                         self.view.addSubview(self.authorLable)
-                        
-                        self.authorLable.snp.makeConstraints { (make) in
-                            make.top.equalTo(84)
-                            //            make.height.equalTo(50)
-                            make.left.right.equalToSuperview()
-                            
-                        }
+
                     
                     }
                     
@@ -93,22 +87,19 @@ class HBPhotosController: HBBaseViewController {
         self.buttonView.delegate = self
         view.addSubview(self.buttonView)
         
-        self.collectionView.snp.makeConstraints { (make) in
-            make.top.left.right.equalToSuperview()
-            make.bottom.equalTo(-44)
-        }
-        self.buttonView.snp.makeConstraints { (make) in
-            make.top.equalTo(self.collectionView.snp.bottom)
-            make.left.right.bottom.equalToSuperview()
-            
-        }
     }
-  
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        collectionView.frame = CGRect(x: 0, y: 0, width: self.view.hb_W, height: self.view.hb_H - 44)
+        buttonView.frame = CGRect(x: 0, y: self.view.hb_H - 44, width: self.view.hb_W, height: 44)
+    }
    fileprivate lazy var collectionView: UICollectionView = {
     
         let flowLayout = UICollectionViewFlowLayout()
     
         let collectionview = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
+    
         collectionview.backgroundColor = UIColor.white
         collectionview.delegate = self
         collectionview.dataSource = self
@@ -300,31 +291,23 @@ class HBCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(self.videoImageView)
         contentView.addSubview(self.timeLable)
         
-        self.imageView.snp.makeConstraints { (make) in
-            make.top.left.bottom.right.equalToSuperview()
-        }
-        self.chooseBtn.snp.makeConstraints { (make) in
-            make.size.equalTo(30)
-            make.top.right.equalToSuperview()
-        }
-        self.videoImageView.snp.makeConstraints { (make) in
-            make.width.equalTo(40)
-            make.height.equalTo(20)
-            make.left.equalTo(self).offset(-3)
-            make.bottom.equalTo(self).offset(-3)
-        }
-        
-        self.timeLable.setContentHuggingPriority(UILayoutPriorityRequired, for: .horizontal)
-        
-        self.timeLable.snp.makeConstraints { (make) in
-            make.height.equalTo(20)
-            make.right.equalTo(self).offset(-3)
-            make.bottom.equalTo(self).offset(-3)
-            
-        }
+
     }
     override func layoutSubviews() {
         super.layoutSubviews()
+        
+        
+        self.imageView.frame = self.bounds
+        
+        self.chooseBtn.frame = CGRect(x: self.hb_W - 30, y: 0, width: 30, height: 30)
+        
+        self.videoImageView.frame = CGRect(x: 0, y: self.hb_H - 20, width: 40, height: 20)
+        
+
+        self.timeLable.hb_W = 50
+        self.timeLable.hb_H = 20
+        self.timeLable.hb_X = self.hb_W - self.timeLable.hb_W - 2
+        self.timeLable.hb_centerY = self.videoImageView.hb_centerY
         
         self.shadowLayer.frame = CGRect(x: 0, y: contentView.hb_H - 30, width: contentView.hb_W, height: 30)
     }

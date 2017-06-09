@@ -30,9 +30,6 @@ class HBPhotoBrowser: HBBaseViewController {
         self.tableView.register(HBPhotoBrowserCell.self, forCellReuseIdentifier: "UITableViewCellID")
         self.view.addSubview(self.tableView)
         
-        self.tableView.snp.makeConstraints { (make) in
-            make.top.left.bottom.right.equalToSuperview()
-        }
         //3.获取photo
         setPhotos()
         
@@ -43,8 +40,6 @@ class HBPhotoBrowser: HBBaseViewController {
         
         view.backgroundColor = UIColor.white
         title = "照片";
-        
-        
         
     }
     
@@ -95,13 +90,7 @@ class HBPhotoBrowser: HBBaseViewController {
                     
                     self.authorLable.text = "请在iPhone的\"设置-隐私-照片\"选项中，\n允许访问你的手机相册。"
                     self.view.addSubview(self.authorLable)
-                    
-                    self.authorLable.snp.makeConstraints { (make) in
-                        make.top.equalTo(84)
-                        //            make.height.equalTo(50)
-                        make.left.right.equalToSuperview()
-                        
-                    }
+
                 }
                 
             }
@@ -110,7 +99,7 @@ class HBPhotoBrowser: HBBaseViewController {
     //#MARK: 懒加载
    fileprivate lazy var tableView: UITableView = {
     
-        let tabview = UITableView(frame: CGRect.zero, style: .plain)
+        let tabview = UITableView(frame: self.view.bounds, style: .plain)
         tabview.tableFooterView = UIView()
         tabview.delegate = self
         tabview.dataSource = self
@@ -167,16 +156,32 @@ class HBPhotoBrowserCell: UITableViewCell {
         
             if let getModel = model {
                 
-                self.iconImageView.image = getModel.collectionLastImage
-                self.title.text = getModel.collectionTitle
-                self.subtitle.text = "\(getModel.collectionImageCount)" + "张照片" + "、\(getModel.collectionVideoCount)" + "个视频"
+                iconImageView.image = getModel.collectionLastImage
+                title.text = getModel.collectionTitle
+                subtitle.text = "\(getModel.collectionImageCount)" + "张照片" + "、\(getModel.collectionVideoCount)" + "个视频"
+             
             }
             
     
         }
     }
-    
-    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        iconImageView.hb_X = 5
+        iconImageView.frame.size = CGSize(width: 50, height: 50)
+        iconImageView.hb_centerY = self.contentView.hb_centerY
+        
+        title.sizeToFit()
+        title.hb_X = self.iconImageView.frame.maxX + 15
+        title.hb_centerY = self.iconImageView.hb_centerY
+        
+        subtitle.sizeToFit()
+        subtitle.hb_X = self.title.frame.maxX + 10
+        subtitle.hb_centerY = self.title.hb_centerY
+        
+    }
+    //FIXME: 修改frame
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -184,32 +189,13 @@ class HBPhotoBrowserCell: UITableViewCell {
         self.contentView.addSubview(title)
         self.contentView.addSubview(subtitle)
         
-        iconImageView.snp.makeConstraints { (make) in
-            
-            make.left.equalTo(5)
-            make.size.equalTo(50)
-            make.centerY.equalTo(self.contentView.snp.centerY)
-        }
-        
-        title.setContentHuggingPriority(UILayoutPriorityRequired, for: .horizontal)
-        title.snp.makeConstraints { (make) in
-            make.left.equalTo(iconImageView.snp.right).offset(15)
-            make.centerY.equalTo(iconImageView.snp.centerY)
-        }
-        subtitle.setContentHuggingPriority(UILayoutPriorityRequired, for: .horizontal)
-        subtitle.snp.makeConstraints { (make) in
-            
-            make.left.equalTo(title.snp.right).offset(10)
-            make.centerY.equalTo(title.snp.centerY)
-            
-            
-        }
         
     }
     //MARK: getter 设置cell子视图
    fileprivate lazy var iconImageView: UIImageView = {
         
     let icon = UIImageView()
+   
     icon.contentMode = .scaleAspectFill
     icon.layer.masksToBounds = true
     return icon
@@ -218,6 +204,7 @@ class HBPhotoBrowserCell: UITableViewCell {
    fileprivate lazy var title: UILabel = {
         
     let leftTitle = UILabel()
+    
     leftTitle.textColor = UIColor ( red: 0.5333, green: 0.5333, blue: 0.5333, alpha: 1.0 )
     leftTitle.font = UIFont.systemFont(ofSize: 17)
     
@@ -227,6 +214,7 @@ class HBPhotoBrowserCell: UITableViewCell {
    fileprivate lazy var subtitle: UILabel = {
         
     let rightTitle = UILabel()
+    
     rightTitle.textColor = UIColor ( red: 0.8637, green: 0.8637, blue: 0.8637, alpha: 1.0 )
     rightTitle.font = UIFont.systemFont(ofSize: 14)
     
@@ -334,7 +322,7 @@ class HBBaseViewController: UIViewController {
         return true
     }
     lazy var authorLable: UILabel = {
-        let deniedLable = UILabel()
+        let deniedLable = UILabel(frame: CGRect(x: 0, y: 84, width: self.view.hb_W, height: 44))
         deniedLable.numberOfLines = 0
         deniedLable.textAlignment = .center
         deniedLable.textColor = UIColor.black
