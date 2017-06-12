@@ -661,8 +661,8 @@ class HBButtomView: UIView {
     lazy var rightBtn: UIButton = {
         
         let btn = UIButton()
-        btn.setTitleColor(mainColor, for: UIControlState())
-        btn.setTitleColor(UIColor ( red: 0.8902, green: 0.8902, blue: 0.8902, alpha: 1.0 ), for: .disabled)
+        btn.setTitleColor(HBPhoto_Buttom_Send_Color_Normal, for: UIControlState())
+        btn.setTitleColor(HBPhoto_Buttom_Send_Color_Disabled, for: .disabled)
         btn.setTitle("发送", for: UIControlState())
         btn.addTarget(self, action: .buttomSendChick, for: .touchUpInside)
         btn.isEnabled = false

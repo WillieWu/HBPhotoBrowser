@@ -8,29 +8,41 @@
 
 import UIKit
 
+//MARK: UI 设置 ------------------ BEGIN
+//MARK: 导航栏
+let HBNavgation_tintColor = UIColor.white
+let HBNavgation_barTintColor = UIColor.black
+let HBNavgation_titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
+
+//MARK: 相册分类界面
+let HBPhotoCollectionsTableViewCell_Height: CGFloat = 66
+let HBPhotoCollectionsTableViewCell_Image = UIImage(named: "HBPhotoBrowser.bundle/place_icon")
+let HBPhotoCollectionsTableViewCell_ImageSize = CGSize(width: 50, height: 50)
+
+let HBPhotoCollectionsTableViewCell_TitleColor = UIColor ( red: 0.5333, green: 0.5333, blue: 0.5333, alpha: 1.0 )
+let HBPhotoCollectionsTableViewCell_TitleFont = UIFont.systemFont(ofSize: 17)
+
+let HBPhotoCollectionsTableViewCell_SubtitleColor = UIColor ( red: 0.8637, green: 0.8637, blue: 0.8637, alpha: 1.0 )
+let HBPhotoCollectionsTableViewCell_SubtitleFont = UIFont.systemFont(ofSize: 14)
+
+//MARK: 照片缩略图界面
+let HBPhotos_select_YES_Icon = UIImage(named: "HBPhotoBrowser.bundle/select_Yes")
+let HBPhotos_select_NO_Icon = UIImage(named: "HBPhotoBrowser.bundle/select_No")
+let HBPhotos_padding: CGFloat = 2.0
+let HBPhotos_line: CGFloat = UIScreen.main.bounds.size.width > 375 ? 5 : 4
+
+//MARK: 底部工具栏
+let HBPhoto_Buttom_Send_Color_Normal = color(245,g: 79,b: 85)
+let HBPhoto_Buttom_Send_Color_Disabled = UIColor ( red: 0.8902, green: 0.8902, blue: 0.8902, alpha: 1.0 )
+
+//MARK: UI 设置 ------------------ END
+let KEY_HB_ORIGINIMAGE = "KEY_HB_ORIGINIMAGE"
+
 func color(_ r: CGFloat, g: CGFloat, b: CGFloat) -> UIColor {
     return color_a(r: r, g: g, b: b, a: 1)
 }
 func color_a(r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat) -> UIColor {
     return UIColor(red: r/255.0, green: g/255.0, blue: b/255.0, alpha: a)
-}
-let mainColor = color(245,g: 79,b: 85)
-let KEY_HB_ORIGINIMAGE = "KEY_HB_ORIGINIMAGE"
-
-/// 秒数转换成00:00:00
-///
-/// - Parameter time: 多少秒
-/// - Returns: 时间字符串
-func stringTime(_ time:NSInteger) -> String {
-    
-    let hours = String(format: "%02d", (time / 3600))
-    let minutes = String(format: "%02d", ((time / 60) % 60))
-    let seconds = String(format: "%02d", (time % 60))
-    
-    if hours == "00" {
-        return minutes + ":" + seconds
-    }
-    return hours + ":" + minutes + ":" + seconds
 }
 
 extension String {

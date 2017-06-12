@@ -9,8 +9,7 @@
 import UIKit
 import Photos
 
-let padding: CGFloat = 2.0
-let line: CGFloat = UIScreen.main.bounds.size.width > 375 ? 5 : 4
+
 
 private extension Selector {
     static let chooseBtnChick = #selector(HBCollectionViewCell.chickChooseBtn(_:))
@@ -165,19 +164,19 @@ extension HBPhotosController: UICollectionViewDelegate, UICollectionViewDataSour
     }
     //#MARK: UICollectionViewDelegateFlowLayout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return padding
+        return HBPhotos_padding
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
     
-        return padding
+        return HBPhotos_padding
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        let itemW = (UIScreen.main.bounds.size.width - (line + 1) * padding) / line
+        let itemW = (UIScreen.main.bounds.size.width - (HBPhotos_line + 1) * HBPhotos_padding) / HBPhotos_line
         return CGSize(width: itemW, height: itemW)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsetsMake(padding, padding, padding, padding)
+        return UIEdgeInsetsMake(HBPhotos_padding, HBPhotos_padding, HBPhotos_padding, HBPhotos_padding)
     }
     //MARK: HBCollectionViewCellDelegate
     func collectionViewChickStateBtn(_ cell: HBCollectionViewCell, model: photo, indexPath: IndexPath, chickBtn: UIButton) {
@@ -320,7 +319,21 @@ class HBCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
         
     }
-    
+    /// 秒数转换成00:00:00
+    ///
+    /// - Parameter time: 多少秒
+    /// - Returns: 时间字符串
+    fileprivate func stringTime(_ time:NSInteger) -> String {
+        
+        let hours = String(format: "%02d", (time / 3600))
+        let minutes = String(format: "%02d", ((time / 60) % 60))
+        let seconds = String(format: "%02d", (time % 60))
+        
+        if hours == "00" {
+            return minutes + ":" + seconds
+        }
+        return hours + ":" + minutes + ":" + seconds
+    }
     fileprivate lazy var imageView: UIImageView = {
         let icon = UIImageView(frame: .zero)
         icon.layer.masksToBounds = true
@@ -330,8 +343,8 @@ class HBCollectionViewCell: UICollectionViewCell {
     fileprivate lazy var chooseBtn: UIButton = {
         
         let btn = UIButton()
-        btn.setImage(UIImage(named: "HBPhotoBrowser.bundle/select_No"), for: UIControlState())
-        btn.setImage(UIImage(named: "HBPhotoBrowser.bundle/select_Yes"), for: .selected)
+        btn.setImage(HBPhotos_select_NO_Icon, for: UIControlState())
+        btn.setImage(HBPhotos_select_YES_Icon, for: .selected)
         btn.addTarget(self, action: .chooseBtnChick, for: .touchUpInside)
         btn.imageView?.contentMode = .center
         

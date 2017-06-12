@@ -8,7 +8,7 @@
 
 import UIKit
 import Photos
-import SnapKit
+//import SnapKit
 
 
 private extension Selector {
@@ -142,7 +142,7 @@ extension HBPhotoBrowser: UITableViewDelegate, UITableViewDataSource {
  
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 66
+        return HBPhotoCollectionsTableViewCell_Height
     }
     
 }
@@ -205,8 +205,8 @@ class HBPhotoBrowserCell: UITableViewCell {
         
     let leftTitle = UILabel()
     
-    leftTitle.textColor = UIColor ( red: 0.5333, green: 0.5333, blue: 0.5333, alpha: 1.0 )
-    leftTitle.font = UIFont.systemFont(ofSize: 17)
+    leftTitle.textColor = HBPhotoCollectionsTableViewCell_TitleColor
+    leftTitle.font = HBPhotoCollectionsTableViewCell_TitleFont
     
     return leftTitle
         
@@ -215,8 +215,8 @@ class HBPhotoBrowserCell: UITableViewCell {
         
     let rightTitle = UILabel()
     
-    rightTitle.textColor = UIColor ( red: 0.8637, green: 0.8637, blue: 0.8637, alpha: 1.0 )
-    rightTitle.font = UIFont.systemFont(ofSize: 14)
+    rightTitle.textColor = HBPhotoCollectionsTableViewCell_SubtitleColor
+    rightTitle.font = HBPhotoCollectionsTableViewCell_SubtitleFont
     
     return rightTitle
         
@@ -231,9 +231,9 @@ class HBNavgationBrowser: UINavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationBar.tintColor = UIColor.white
-        self.navigationBar.barTintColor = UIColor.black
-        self.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
+        self.navigationBar.tintColor = HBNavgation_tintColor
+        self.navigationBar.barTintColor = HBNavgation_barTintColor
+        self.navigationBar.titleTextAttributes = HBNavgation_titleTextAttributes
     }
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -333,9 +333,6 @@ class HBBaseViewController: UIViewController {
 //MARK: 数据模型
 class photoBrowerModel: NSObject {
     
-    private let size = CGSize(width: 50, height: 50)
-    private let imageCell = UIImage(named: "HBPhotoBrowser.bundle/place_icon")
-    
     var assetCollection: PHAssetCollection?
     var collectionTitle: String?
     var collectionLastImage: UIImage?
@@ -352,7 +349,7 @@ class photoBrowerModel: NSObject {
         
         if let asset = result.lastObject {
             
-            PHImageManager.default().requestImage(for: asset, targetSize:size , contentMode: .aspectFill, options: requestOptions, resultHandler: { (image, imageDic) in
+            PHImageManager.default().requestImage(for: asset, targetSize:HBPhotoCollectionsTableViewCell_ImageSize , contentMode: .aspectFill, options: requestOptions, resultHandler: { (image, imageDic) in
                 
                 self.collectionLastImage = image
                 
@@ -360,7 +357,7 @@ class photoBrowerModel: NSObject {
             
         }else{
             
-            self.collectionLastImage = imageCell
+            self.collectionLastImage = HBPhotoCollectionsTableViewCell_Image
             
         }
         self.collectionImageCount = result.countOfAssets(with: .image)
