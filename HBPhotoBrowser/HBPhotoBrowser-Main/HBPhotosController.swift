@@ -208,7 +208,8 @@ extension HBPhotosController: UICollectionViewDelegate, UICollectionViewDataSour
         switch state {
         case .send:
         
-            self.delegate?.baseViewController!(self, didPickPhotos: self.selectPhotos, isOriginImage: UserDefaults.standard.bool(forKey: KEY_HB_ORIGINIMAGE))
+            self.delegate?.baseViewController?(self, didPickPhotos: self.selectPhotos, isOriginImage: UserDefaults.standard.bool(forKey: KEY_HB_ORIGINIMAGE))
+            self.dismiss(animated: true, completion: nil)
         }
     }
     //MARK: HBPreviewControllerDelegate

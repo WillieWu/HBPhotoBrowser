@@ -168,6 +168,10 @@ class HBPreviewController: HBBaseViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
         
+        guard self.collectionView.isHidden else {
+            return;
+        }
+    
         playBtnChick()
     
     }
@@ -356,12 +360,13 @@ extension HBPreviewController: UICollectionViewDelegate, UICollectionViewDataSou
         case .send:
             
             guard videoModel != nil else {
-                self.delegate?.baseViewController!(self, didPickPhotos: self.tempList, isOriginImage: UserDefaults.standard.bool(forKey: KEY_HB_ORIGINIMAGE))
+                self.delegate?.baseViewController?(self, didPickPhotos: self.tempList, isOriginImage: UserDefaults.standard.bool(forKey: KEY_HB_ORIGINIMAGE))
+                self.dismiss(animated: true, completion: nil)
                 return
             }
             
-            self.delegate?.baseViewController!(self, didPickVideo: videoModel!)
-            
+            self.delegate?.baseViewController?(self, didPickVideo: videoModel!)
+            self.dismiss(animated: true, completion: nil)
         }
     }
     
@@ -596,7 +601,7 @@ class HBButtomView: UIView {
         
         self.rightBtn.isEnabled = false
         
-        self.rightBtn.setTitle("发送", for: UIControlState())
+        self.rightBtn.setTitle("确定", for: UIControlState())
         
     }
     /**
@@ -608,7 +613,7 @@ class HBButtomView: UIView {
         
         self.rightBtn.isEnabled = true
         
-        self.rightBtn.setTitle("发送 (\(title))", for: UIControlState())
+        self.rightBtn.setTitle("确定 (\(title))", for: UIControlState())
         
         
     }
@@ -663,7 +668,7 @@ class HBButtomView: UIView {
         let btn = UIButton()
         btn.setTitleColor(HBPhoto_Buttom_Send_Color_Normal, for: UIControlState())
         btn.setTitleColor(HBPhoto_Buttom_Send_Color_Disabled, for: .disabled)
-        btn.setTitle("发送", for: UIControlState())
+        btn.setTitle("确定", for: UIControlState())
         btn.addTarget(self, action: .buttomSendChick, for: .touchUpInside)
         btn.isEnabled = false
         return btn

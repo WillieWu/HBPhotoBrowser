@@ -247,7 +247,7 @@ class HBNavgationBrowser: UINavigationController {
      
      - parameter baseVc: baseVc
      */
-    @objc func baseViewcontroller(didCancle baseVc: HBBaseViewController)
+    @objc optional func baseViewcontroller(didCancle baseVc: HBBaseViewController)
     /**
      选取的所有图片
      
@@ -295,7 +295,8 @@ class HBBaseViewController: UIViewController {
     
     func cancle() {
         
-        self.delegate?.baseViewcontroller(didCancle: self)
+        self.delegate?.baseViewcontroller?(didCancle: self)
+        self.dismiss(animated: true, completion: nil)
         
     }
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -314,10 +315,19 @@ class HBBaseViewController: UIViewController {
         
         if photos.count < topVc.maxPhotos { return false}
         
-        if (self.delegate?.responds(to: Selector.maxTap))! {
-            self.delegate?.baseViewController!(self, didMaxCount: topVc.maxPhotos)
+        self.delegate?.baseViewController?(self, didMaxCount: topVc.maxPhotos)
+
+        let errorMessage = "最多选择\(topVc.maxPhotos)张"
+        
+        let alterVc = UIAlertController(title: nil, message: errorMessage, preferredStyle: .alert)
+        
+        let cancleAction = UIAlertAction(title: "确定", style: .cancel) { (action) in
+            print(action.title ?? "标题")
         }
         
+        alterVc.addAction(cancleAction)
+        
+        self.present(alterVc, animated: true, completion: nil)
         
         return true
     }
