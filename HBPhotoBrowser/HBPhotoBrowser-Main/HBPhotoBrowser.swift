@@ -35,7 +35,12 @@ class HBPhotoBrowser: HBBaseViewController {
         
         self.showCancleBtn()
     }
-    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        self.tableView.frame = self.view.bounds
+        
+    }
     func addDefault() {
         
         view.backgroundColor = UIColor.white
@@ -99,7 +104,7 @@ class HBPhotoBrowser: HBBaseViewController {
     //#MARK: 懒加载
    fileprivate lazy var tableView: UITableView = {
     
-        let tabview = UITableView(frame: self.view.bounds, style: .plain)
+        let tabview = UITableView(frame: .zero, style: .plain)
         tabview.tableFooterView = UIView()
         tabview.delegate = self
         tabview.dataSource = self
@@ -248,12 +253,69 @@ class HBNavgationBrowser: UINavigationController {
      - parameter baseVc: baseVc
      */
     @objc optional func baseViewcontroller(didCancle baseVc: HBBaseViewController)
-    /**
-     选取的所有图片
-     
-     - parameter baseVc: baseVc
-     - parameter photos: [photo]
-     */
+    
+    
+    /// 返回选择的照片
+    ///
+    /// 获取Image的两种方式
+    ///
+    ///     //1.获取一张 异步获取
+    ///     photo *mPhoto = [photos firstObject];
+    ///
+    ///     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+    ///
+    ///     options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
+    ///
+    ///     [[PHImageManager defaultManager] requestImageForAsset:mPhoto.asset
+    ///                                                targetSize:[UIScreen mainScreen].bounds.size
+    ///                                               contentMode:PHImageContentModeAspectFill
+    ///                                                   options:options
+    ///                                             resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+    ///
+    ///                                                          //更新UI
+    ///
+    ///                                                         }];
+    ///
+    ///     //2.获取多张图片 异步获取 同步(顺序)执行
+    ///     dispatch_async(dispatch_queue_create(0, 0), ^{
+    ///          for(int i = 0 ;i < photos.count ; i++){
+    ///                 photo *mPhoto = photos[i];
+    ///                 PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+    ///                 options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
+    ///                 options.synchronous = YES;
+    ///                 [[PHImageManager defaultManager] requestImageForAsset:mPhoto.asset
+    ///                                                            targetSize:[UIScreen mainScreen].bounds.size
+    ///                                                           contentMode:PHImageContentModeAspectFill
+    ///                                                               options:options
+    ///                                                         resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+    ///
+    ///                                                                         //更新UI
+    ///                                                                         //按照顺序依次得到Image
+    ///                                                                     }];
+    ///           }
+    ///
+    ///
+    ///         dispatch_async(dispatch_get_main_queue(), ^{
+    ///
+    ///             //继续执行代码
+    ///
+    ///         });
+    ///
+    ///     });
+    ///
+    ///
+    ///
+    ///
+    ///
+    ///
+    ///
+    ///
+    ///
+    ///
+    /// - Parameters:
+    ///   - baseVc: baseVc
+    ///   - photos: 照片数据模型集合
+    ///   - isOriginImage: 是否选择原图
     @objc optional func baseViewController(_ baseVc: HBBaseViewController, didPickPhotos photos: [photo], isOriginImage: Bool)
     
     /// 选取的视频
@@ -285,6 +347,7 @@ class HBBaseViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         
         
     }

@@ -71,13 +71,16 @@ class HBPreviewController: HBBaseViewController {
         super.viewDidLayoutSubviews()
         
         self.collectionView.frame = self.view.bounds
-        
         self.playView.hb_W = 64
         self.playView.hb_H = 64
         self.playView.hb_center = self.view.center
         
         self.buttonView.frame = CGRect(x: 0, y: self.view.hb_H - 44, width: self.view.hb_W, height: 44)
         
+//        if !self.navigationController!.navigationBar.isTranslucent {
+//            self.collectionView.hb_Y = -64
+//        }
+//        
         
     }
     override func viewWillDisappear(_ animated: Bool) {

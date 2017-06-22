@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Photos
+
 
 class ViewController: UIViewController {
 
@@ -24,12 +24,13 @@ class ViewController: UIViewController {
         let navBrowser = HBNavgationBrowser(rootViewController: rootVc)
     
         self.present(navBrowser, animated: true, completion: nil)
+        
+        
     }
     
 }
 
 extension ViewController: HBBaseViewControllerDelegate {
-    
     
     func baseViewController(_ baseVc: HBBaseViewController, didPickPhotos photos: [photo], isOriginImage: Bool) {
         print("一共选取\(photos.count)张图片, 是否原图: \(isOriginImage)")
