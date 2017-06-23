@@ -42,9 +42,10 @@ class HBPreviewController: HBBaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+                
         view.backgroundColor = UIColor.white
         self.automaticallyAdjustsScrollViewInsets = false
+        self.extendedLayoutIncludesOpaqueBars = true
         
         self.collectionView.register(HBPreviewCollectionCell.self, forCellWithReuseIdentifier: "HBPreviewCollectionCellID")
         

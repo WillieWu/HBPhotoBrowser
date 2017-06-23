@@ -41,6 +41,7 @@ class HBPhotoBrowser: HBBaseViewController {
         self.tableView.frame = self.view.bounds
         
     }
+   
     func addDefault() {
         
         view.backgroundColor = UIColor.white
@@ -235,7 +236,7 @@ class HBNavgationBrowser: UINavigationController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+    
         self.navigationBar.tintColor = HBNavgation_tintColor
         self.navigationBar.barTintColor = HBNavgation_barTintColor
         self.navigationBar.titleTextAttributes = HBNavgation_titleTextAttributes
