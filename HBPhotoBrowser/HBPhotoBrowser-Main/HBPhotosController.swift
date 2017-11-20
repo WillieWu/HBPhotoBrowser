@@ -91,7 +91,12 @@ class HBPhotosController: HBBaseViewController {
         super.viewDidLayoutSubviews()
         
         collectionView.frame = CGRect(x: 0, y: 0, width: self.view.hb_W, height: self.view.hb_H - 44)
-        buttonView.frame = CGRect(x: 0, y: self.view.hb_H - 44, width: self.view.hb_W, height: 44)
+        
+        if #available(iOS 11.0, *) {
+            buttonView.frame = CGRect(x: 0, y: self.view.safeAreaLayoutGuide.layoutFrame.maxY - 44, width: self.view.hb_W, height: 44)
+        } else {
+            buttonView.frame = CGRect(x: 0, y: self.view.hb_H - 44, width: self.view.hb_W, height: 44)
+        }
     }
    fileprivate lazy var collectionView: UICollectionView = {
     

@@ -38,7 +38,12 @@ class HBPhotoBrowser: HBBaseViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        self.tableView.frame = self.view.bounds
+        if #available(iOS 11.0, *) {
+            self.tableView.frame = self.view.safeAreaLayoutGuide.layoutFrame
+        } else {
+            // Fallback on earlier versions
+            self.tableView.frame = self.view.bounds
+        }
         
     }
    
