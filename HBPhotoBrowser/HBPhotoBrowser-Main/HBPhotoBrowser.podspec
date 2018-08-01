@@ -2,7 +2,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "HBPhotoBrowser"
-  s.version      = "0.0.1"
+  s.version      = "0.0.2"
   s.summary      = "IOS photo album selection framework"
   s.description  = <<-DESC
   				         这是一个在iOS上面简单的选择视频和照片的库，使用方便的狠哟！么么哒~
