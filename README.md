@@ -2,6 +2,7 @@
 ---
 
 #####cocoapods安装
+
 1.Podfile内容
 
 	source 'https://github.com/CocoaPods/Specs.git'
@@ -16,6 +17,11 @@
 2.安装
 
 	pod install
+	
+3.导入头
+
+	import whb_HBPhotoBrowser
+	
 	
 ######先上个效果图吧！
 
