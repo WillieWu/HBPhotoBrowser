@@ -1,6 +1,22 @@
 ####iOS8.0 swift <Photos.framework >
 ---
 
+#####cocoapods安装
+1.Podfile内容
+
+	source 'https://github.com/CocoaPods/Specs.git'
+	
+	use_frameworks!
+	platform :ios, '8.0'
+	
+	target '项目Target' do
+	pod 'whb_HBPhotoBrowser', '~> 0.0.3'
+	end
+	 
+2.安装
+
+	pod install
+	
 ######先上个效果图吧！
 
 ![效果图](http://upload-images.jianshu.io/upload_images/620797-e2b802c1a0e6143f.gif?imageMogr2/auto-orient/strip)\
