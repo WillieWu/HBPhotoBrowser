@@ -13,6 +13,7 @@ Pod::Spec.new do |s|
   s.platform     = :ios, "8.0"                                    
   s.source       = { :git => "https://github.com/WillieWu/HBPhotoBrowser.git", :tag => "0.0.1" } 
   s.source_files  = "HBPhotoBrowser/HBPhotoBrowser-Main", "HBPhotoBrowser/HBPhotoBrowser-Main/*.{swift}"
+  s.public_header_files = "HBPhotoBrowser/HBPhotoBrowser-Main/*.{swift}"
   s.resource_bundles = {'HBPhotoBrowser' => ['HBPhotoBrowser/HBPhotoBrowser-Main/Resources/*.png']}
   s.requires_arc = true
   s.framework = 'Photos'
