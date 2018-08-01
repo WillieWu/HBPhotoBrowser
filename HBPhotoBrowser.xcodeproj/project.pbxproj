@@ -117,8 +117,8 @@
 		5E51AC26211194FB00775F17 /* HBPhotoBrowser-Main */ = {
 			isa = PBXGroup;
 			children = (
-				5E51AC27211194FB00775F17 /* HBPhotoBrowser.swift */,
 				5E51AC28211194FB00775F17 /* Resources */,
+				5E51AC27211194FB00775F17 /* HBPhotoBrowser.swift */,
 				5E51AC30211194FB00775F17 /* config.swift */,
 				5E51AC31211194FB00775F17 /* HBPhotosController.swift */,
 				5E51AC32211194FB00775F17 /* HBPreviewController.swift */,

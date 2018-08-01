@@ -16,12 +16,12 @@ private extension Selector {
 }
 
 //MARK: HBPhotoBrowser
-class HBPhotoBrowser: HBBaseViewController {
+public class HBPhotoBrowser: HBBaseViewController {
 
     /// 最大选中数量，默认9张
     var maxPhotos: Int = 9
     
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
         
         //1.设置默认属性
@@ -35,7 +35,7 @@ class HBPhotoBrowser: HBBaseViewController {
         
         self.showCancleBtn()
     }
-    override func viewDidLayoutSubviews() {
+    override public func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
         if #available(iOS 11.0, *) {
@@ -133,16 +133,16 @@ class HBPhotoBrowser: HBBaseViewController {
 
 extension HBPhotoBrowser: UITableViewDelegate, UITableViewDataSource {
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.photoList.count
     }
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "UITableViewCellID", for: indexPath) as! HBPhotoBrowserCell
         cell.model = self.photoList[indexPath.row]
         return cell
     }
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let model = self.photoList[indexPath.row]
         
@@ -152,7 +152,7 @@ extension HBPhotoBrowser: UITableViewDelegate, UITableViewDataSource {
         self.tableView.deselectRow(at: indexPath, animated: false)
  
     }
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return HBPhotoCollectionsTableViewCell_Height
     }
     
@@ -342,7 +342,7 @@ private extension Selector {
     static let rightBarButtonCancleChick = #selector(HBPhotoBrowser.cancle)
 }
 //#MARK: 基类
-class HBBaseViewController: UIViewController {
+public class HBBaseViewController: UIViewController {
     
     weak var delegate: HBBaseViewControllerDelegate?
     
@@ -351,7 +351,7 @@ class HBBaseViewController: UIViewController {
         self.delegate = delegate
     }
     
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
         
         
@@ -368,7 +368,7 @@ class HBBaseViewController: UIViewController {
         self.dismiss(animated: true, completion: nil)
         
     }
-    override var preferredStatusBarStyle: UIStatusBarStyle {
+    override public var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
     /**
