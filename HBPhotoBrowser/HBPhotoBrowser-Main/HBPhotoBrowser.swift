@@ -346,7 +346,7 @@ public class HBBaseViewController: UIViewController {
     
     public weak var delegate: HBBaseViewControllerDelegate?
     
-    convenience init(delegate: HBBaseViewControllerDelegate) {
+    convenience public init(delegate: HBBaseViewControllerDelegate) {
         self.init()
         self.delegate = delegate
     }
