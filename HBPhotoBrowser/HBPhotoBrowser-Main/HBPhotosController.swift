@@ -398,7 +398,7 @@ extension HBCollectionViewCell {
     }
 }
 
-class photo: NSObject {
+public class photo: NSObject {
     
     var asset: PHAsset?
     /// 是否选中

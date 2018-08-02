@@ -19,7 +19,7 @@ private extension Selector {
 public class HBPhotoBrowser: HBBaseViewController {
 
     /// 最大选中数量，默认9张
-    var maxPhotos: Int = 9
+    public var maxPhotos: Int = 9
     
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -237,21 +237,21 @@ class HBPhotoBrowserCell: UITableViewCell {
     }
 }
 //MARK: 导航控制器
-class HBNavgationBrowser: UINavigationController {
+public final class HBNavgationBrowser: UINavigationController {
     
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
     
         self.navigationBar.tintColor = HBNavgation_tintColor
         self.navigationBar.barTintColor = HBNavgation_barTintColor
         self.navigationBar.titleTextAttributes = HBNavgation_titleTextAttributes
     }
-    override var preferredStatusBarStyle: UIStatusBarStyle {
+    override public var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
 }
 
-@objc protocol HBBaseViewControllerDelegate: NSObjectProtocol {
+@objc public protocol HBBaseViewControllerDelegate: NSObjectProtocol {
     
     /**
      取消，返回到根视图
@@ -344,7 +344,7 @@ private extension Selector {
 //#MARK: 基类
 public class HBBaseViewController: UIViewController {
     
-    weak var delegate: HBBaseViewControllerDelegate?
+    public weak var delegate: HBBaseViewControllerDelegate?
     
     convenience init(delegate: HBBaseViewControllerDelegate) {
         self.init()
