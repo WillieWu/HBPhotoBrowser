@@ -12,19 +12,21 @@ extension UIImage {
     
     class func whb_imageName(name: String) -> UIImage {
         
-        let bundlePath = Bundle.main.path(forResource: "HBPhotoBrowser", ofType: "bundle")
-        guard let _ = bundlePath else {
-            print(#file + "获取bundlePath 失败")
+        let currentBundle = Bundle(for: self)
+
+        let ImageFile = "HBPhotoBrowser.bundle/" + name
+       
+        let imagePath = currentBundle.path(forResource: ImageFile, ofType: nil)
+        
+        guard let _ = imagePath else {
+            print(#file + "获取Image 失败: \(String(describing: imagePath))")
             return UIImage()
         }
-        let currentBundle = Bundle(path: bundlePath!)
         
-        let ImageFile = (currentBundle?.resourcePath)! + name
-        
-        let getImage = UIImage(contentsOfFile: ImageFile)
+        let getImage = UIImage(contentsOfFile: imagePath!)
         
         guard let _ = getImage else {
-            print(#file + "获取Image 失败: \(ImageFile)")
+            print(#file + "获取Image 失败: \(imagePath!)")
             return UIImage()
         }
         
@@ -42,7 +44,8 @@ public let HBNavgation_titleTextAttributes = [NSForegroundColorAttributeName : U
 
 //MARK: 相册分类界面
 public let HBPhotoCollectionsTableViewCell_Height: CGFloat = 66
-public let HBPhotoCollectionsTableViewCell_Image = UIImage.whb_imageName(name: "place_icon.png")
+//FIXME: 测试
+//public let HBPhotoCollectionsTableViewCell_Image = UIImage.whb_imageName(name: "place_icon.png")
 public let HBPhotoCollectionsTableViewCell_ImageSize = CGSize(width: 50, height: 50)
 
 public let HBPhotoCollectionsTableViewCell_TitleColor = UIColor ( red: 0.5333, green: 0.5333, blue: 0.5333, alpha: 1.0 )
