@@ -127,7 +127,7 @@ public class HBPhotoBrowser: HBBaseViewController {
     
     
     deinit {
-        print("销毁啦-------------------------1");
+        print(#file + "销毁")
     }
 }
 

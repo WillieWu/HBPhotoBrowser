@@ -16,7 +16,7 @@ public let HBNavgation_titleTextAttributes = [NSForegroundColorAttributeName : U
 
 //MARK: 相册分类界面
 public let HBPhotoCollectionsTableViewCell_Height: CGFloat = 66
-public let HBPhotoCollectionsTableViewCell_Image = UIImage(named: "HBPhotoBrowser.bundle/place_icon")
+public let HBPhotoCollectionsTableViewCell_Image = UIImage(named: "place_icon")
 public let HBPhotoCollectionsTableViewCell_ImageSize = CGSize(width: 50, height: 50)
 
 public let HBPhotoCollectionsTableViewCell_TitleColor = UIColor ( red: 0.5333, green: 0.5333, blue: 0.5333, alpha: 1.0 )
@@ -26,8 +26,8 @@ public let HBPhotoCollectionsTableViewCell_SubtitleColor = UIColor ( red: 0.8637
 public let HBPhotoCollectionsTableViewCell_SubtitleFont = UIFont.systemFont(ofSize: 14)
 
 //MARK: 照片缩略图界面
-public let HBPhotos_select_YES_Icon = UIImage(named: "HBPhotoBrowser.bundle/select_Yes")
-public let HBPhotos_select_NO_Icon = UIImage(named: "HBPhotoBrowser.bundle/select_No")
+public let HBPhotos_select_YES_Icon = UIImage(named: "select_Yes")
+public let HBPhotos_select_NO_Icon = UIImage(named: "select_No")
 public let HBPhotos_padding: CGFloat = 2.0
 public let HBPhotos_line: CGFloat = UIScreen.main.bounds.size.width > 375 ? 5 : 4
 

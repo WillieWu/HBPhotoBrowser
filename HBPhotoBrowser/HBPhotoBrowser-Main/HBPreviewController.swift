@@ -279,8 +279,8 @@ class HBPreviewController: HBBaseViewController {
     
         let btn = UIButton.init(type: UIButtonType.custom)
         btn.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
-        btn.setImage(UIImage(named: "HBPhotoBrowser.bundle/select_No"), for: UIControlState())
-        btn.setImage(UIImage(named: "HBPhotoBrowser.bundle/select_Yes"), for: .selected)
+        btn.setImage(UIImage(named: "select_No"), for: UIControlState())
+        btn.setImage(UIImage(named: "select_Yes"), for: .selected)
         btn.addTarget(self, action: .rightChooseBtnChick, for: .touchUpInside)
         btn.imageView?.contentMode = .center
         return btn
@@ -288,7 +288,7 @@ class HBPreviewController: HBBaseViewController {
     }()
     fileprivate lazy var playView: UIImageView = {
         
-        let image = UIImageView(image: UIImage(named: "HBPhotoBrowser.bundle/play"))
+        let image = UIImageView(image: UIImage(named: "play"))
         
         return image
         
@@ -300,7 +300,7 @@ class HBPreviewController: HBBaseViewController {
         return buttonView
     }()
     deinit {
-        print("销毁啦-------------------------3");
+        print(#file + "销毁")
     }
 }
 extension HBPreviewController: UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout, HBPreviewCollectionCellDelegate,HBButtomViewDelegate {
@@ -665,8 +665,8 @@ class HBButtomView: UIView {
     lazy var leftBtn: HBButton = {
     
         let btn = HBButton()
-        btn.setImage(UIImage(named: "HBPhotoBrowser.bundle/select_No"), for: UIControlState())
-        btn.setImage(UIImage(named: "HBPhotoBrowser.bundle/select_Yes"), for: .selected)
+        btn.setImage(UIImage(named: "select_No"), for: UIControlState())
+        btn.setImage(UIImage(named: "select_Yes"), for: .selected)
         btn.setTitle("原图", for: UIControlState())
         return btn
     

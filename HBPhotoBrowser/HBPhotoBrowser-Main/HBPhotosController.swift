@@ -126,7 +126,7 @@ class HBPhotosController: HBBaseViewController {
         return photos
     }()
     deinit {
-        print("销毁啦-------------------------2");
+        print(#file + "销毁")
     }
 }
 extension HBPhotosController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, HBCollectionViewCellDelegate, HBButtomViewDelegate, HBPreviewControllerDelegate {
@@ -367,7 +367,7 @@ class HBCollectionViewCell: UICollectionViewCell {
     
     }()
     fileprivate lazy var videoImageView: UIImageView = {
-        let videoImage = UIImageView(image: UIImage(named: "HBPhotoBrowser.bundle/camera"))
+        let videoImage = UIImageView(image: UIImage(named: "camera"))
         videoImage.contentMode = .center
         return videoImage
     }()
