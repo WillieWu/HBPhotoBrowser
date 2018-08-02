@@ -18,7 +18,7 @@
 ![目录](http://upload-images.jianshu.io/upload_images/620797-47dcd1e484fcca95.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 
-###一、cocoapods安装
+##一、cocoapods安装
 
 1.Podfile内容
 
@@ -39,7 +39,8 @@
 
 	import whb_HBPhotoBrowser
 
-###二、文件导入
+##二、文件导入
+
 ###1.导入所需文件
 导入`<Photos.framework >`与`HBPhotoBrowser-Main`
 
