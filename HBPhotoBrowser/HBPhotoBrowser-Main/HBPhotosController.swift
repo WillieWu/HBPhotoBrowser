@@ -367,7 +367,7 @@ class HBCollectionViewCell: UICollectionViewCell {
     
     }()
     fileprivate lazy var videoImageView: UIImageView = {
-        let videoImage = UIImageView(image: UIImage(named: "camera"))
+        let videoImage = UIImageView(image: UIImage.whb_imageName(name: "camera@2x.png"))
         videoImage.contentMode = .center
         return videoImage
     }()

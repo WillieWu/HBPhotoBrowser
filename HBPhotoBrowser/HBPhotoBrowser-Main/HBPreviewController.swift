@@ -279,8 +279,8 @@ class HBPreviewController: HBBaseViewController {
     
         let btn = UIButton.init(type: UIButtonType.custom)
         btn.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
-        btn.setImage(UIImage(named: "select_No"), for: UIControlState())
-        btn.setImage(UIImage(named: "select_Yes"), for: .selected)
+        btn.setImage(HBPhotos_select_YES_Icon, for: UIControlState())
+        btn.setImage(HBPhotos_select_NO_Icon, for: .selected)
         btn.addTarget(self, action: .rightChooseBtnChick, for: .touchUpInside)
         btn.imageView?.contentMode = .center
         return btn
@@ -288,7 +288,7 @@ class HBPreviewController: HBBaseViewController {
     }()
     fileprivate lazy var playView: UIImageView = {
         
-        let image = UIImageView(image: UIImage(named: "play"))
+        let image = UIImageView(image: UIImage.whb_imageName(name: "play@2x.png"))
         
         return image
         
@@ -665,8 +665,8 @@ class HBButtomView: UIView {
     lazy var leftBtn: HBButton = {
     
         let btn = HBButton()
-        btn.setImage(UIImage(named: "select_No"), for: UIControlState())
-        btn.setImage(UIImage(named: "select_Yes"), for: .selected)
+        btn.setImage(HBPhotos_select_NO_Icon, for: UIControlState())
+        btn.setImage(HBPhotos_select_YES_Icon, for: .selected)
         btn.setTitle("原图", for: UIControlState())
         return btn
     

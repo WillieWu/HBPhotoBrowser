@@ -12,11 +12,21 @@ extension UIImage {
     
     class func whb_imageName(name: String) -> UIImage {
         
-        let currentBundle = Bundle(for: self)
+        let currentBundlePath = Bundle(for: HBPhotoBrowser.self).path(forResource: "HBPhotoBrowser", ofType: "bundle")
+        
+        guard let _ = currentBundlePath else {
+            print(#file + "获取currentBundlePath 失败: \(String(describing: currentBundlePath))")
+            return UIImage()
+        }
+        
+        let currentBundle = Bundle(path: currentBundlePath!)
+        
+        guard let _ = currentBundle else {
+            print(#file + "获取currentBundle 失败: \(String(describing: currentBundlePath))")
+            return UIImage()
+        }
 
-        let ImageFile = "HBPhotoBrowser.bundle/" + name
-       
-        let imagePath = currentBundle.path(forResource: ImageFile, ofType: nil)
+        let imagePath = currentBundle!.path(forResource: name, ofType: nil)
         
         guard let _ = imagePath else {
             print(#file + "获取Image 失败: \(String(describing: imagePath))")
@@ -44,8 +54,7 @@ public let HBNavgation_titleTextAttributes = [NSForegroundColorAttributeName : U
 
 //MARK: 相册分类界面
 public let HBPhotoCollectionsTableViewCell_Height: CGFloat = 66
-//FIXME: 测试
-//public let HBPhotoCollectionsTableViewCell_Image = UIImage.whb_imageName(name: "place_icon.png")
+public let HBPhotoCollectionsTableViewCell_Image = UIImage.whb_imageName(name: "place_icon.png")
 public let HBPhotoCollectionsTableViewCell_ImageSize = CGSize(width: 50, height: 50)
 
 public let HBPhotoCollectionsTableViewCell_TitleColor = UIColor ( red: 0.5333, green: 0.5333, blue: 0.5333, alpha: 1.0 )
@@ -55,8 +64,8 @@ public let HBPhotoCollectionsTableViewCell_SubtitleColor = UIColor ( red: 0.8637
 public let HBPhotoCollectionsTableViewCell_SubtitleFont = UIFont.systemFont(ofSize: 14)
 
 //MARK: 照片缩略图界面
-public let HBPhotos_select_YES_Icon = UIImage(named: "select_Yes")
-public let HBPhotos_select_NO_Icon = UIImage(named: "select_No")
+public let HBPhotos_select_YES_Icon = UIImage.whb_imageName(name: "select_Yes@2x.png")
+public let HBPhotos_select_NO_Icon = UIImage.whb_imageName(name: "select_No@2x.png")
 public let HBPhotos_padding: CGFloat = 2.0
 public let HBPhotos_line: CGFloat = UIScreen.main.bounds.size.width > 375 ? 5 : 4
 
@@ -71,6 +80,7 @@ func color(_ r: CGFloat, g: CGFloat, b: CGFloat) -> UIColor {
     return color_a(r: r, g: g, b: b, a: 1)
 }
 func color_a(r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat) -> UIColor {
+    
     return UIColor(red: r/255.0, green: g/255.0, blue: b/255.0, alpha: a)
 }
 

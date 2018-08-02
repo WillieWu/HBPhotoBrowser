@@ -436,9 +436,7 @@ class photoBrowerModel: NSObject {
             
         }else{
             
-            self.collectionLastImage = UIImage.whb_imageName(name: "place_icon.png")
-            //FIXME: 测试
-//            self.collectionLastImage = HBPhotoCollectionsTableViewCell_Image
+            self.collectionLastImage = HBPhotoCollectionsTableViewCell_Image
             
         }
         self.collectionImageCount = result.countOfAssets(with: .image)

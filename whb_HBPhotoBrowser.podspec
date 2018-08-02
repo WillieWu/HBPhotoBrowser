@@ -2,7 +2,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "whb_HBPhotoBrowser"                               
-  s.version      = "0.0.8"                                        
+  s.version      = "0.0.9"                                        
   s.summary      = "iOS whb_HBPhotoBrowser"
 
 
@@ -11,10 +11,11 @@ Pod::Spec.new do |s|
   s.author       = { "hongbin.wu" => "601479318@qq.com" }
   s.license      = "MIT"            
   s.platform     = :ios, "8.0"                                    
-  s.source       = { :git => "https://github.com/WillieWu/HBPhotoBrowser.git", :tag => "0.0.8" } 
+  s.source       = { :git => "https://github.com/WillieWu/HBPhotoBrowser.git", :tag => "0.0.9" } 
   s.source_files  = "HBPhotoBrowser/HBPhotoBrowser-Main", "HBPhotoBrowser/HBPhotoBrowser-Main/*.{swift}"
 
-  s.resource_bundles = {'HBPhotoBrowser' => ['HBPhotoBrowser/HBPhotoBrowser-Main/Resources/*.png']}
+  # s.resource_bundles = {'HBPhotoBrowser' => ['HBPhotoBrowser/HBPhotoBrowser-Main/HBPhotoBrowser.bundle']}
+  s.resources     = "HBPhotoBrowser/HBPhotoBrowser-Main/HBPhotoBrowser.bundle"
   s.requires_arc = true
   s.framework    = "UIKit","Foundation","Photos"
   s.swift_version = '3.2'
