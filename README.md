@@ -1,7 +1,24 @@
 ####iOS8.0 swift <Photos.framework >
 ---
 
-#####cocoapods安装
+######先上个效果图吧！
+
+![效果图](http://upload-images.jianshu.io/upload_images/620797-e2b802c1a0e6143f.gif?imageMogr2/auto-orient/strip)\
+
+> 整Demo个写下来，没花多少时间。主要也就是拿swift练手。
+
+***这个里面最主要的就是优化内存消耗问题了，一直控制在15M以内！***
+
+***使用iphone5（9.2）也就是在展示所有小图片的时候，滚动灰常流畅。甚至比系统相册滚动的时候流畅。本人亲测哈。。***
+
+---
+
+***工程目录文件***
+
+![目录](http://upload-images.jianshu.io/upload_images/620797-47dcd1e484fcca95.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+###一、cocoapods安装
 
 1.Podfile内容
 
@@ -21,24 +38,8 @@
 3.导入头
 
 	import whb_HBPhotoBrowser
-	
-	
-######先上个效果图吧！
 
-![效果图](http://upload-images.jianshu.io/upload_images/620797-e2b802c1a0e6143f.gif?imageMogr2/auto-orient/strip)\
-
-> 整Demo个写下来，没花多少时间。主要也就是拿swift练手。
-
-***这个里面最主要的就是优化内存消耗问题了，一直控制在15M以内！***
-
-***使用iphone5（9.2）也就是在展示所有小图片的时候，滚动灰常流畅。甚至比系统相册滚动的时候流畅。本人亲测哈。。***
-
----
-
-***工程目录文件***
-
-![目录](http://upload-images.jianshu.io/upload_images/620797-47dcd1e484fcca95.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
+###二、文件导入
 ###1.导入所需文件
 导入`<Photos.framework >`与`HBPhotoBrowser-Main`
 
