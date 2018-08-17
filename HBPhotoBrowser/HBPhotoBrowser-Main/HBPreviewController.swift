@@ -279,8 +279,8 @@ class HBPreviewController: HBBaseViewController {
     
         let btn = UIButton.init(type: UIButtonType.custom)
         btn.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
-        btn.setImage(HBPhotos_select_YES_Icon, for: UIControlState())
-        btn.setImage(HBPhotos_select_NO_Icon, for: .selected)
+        btn.setImage(HBPhotos_select_NO_Icon, for: UIControlState())
+        btn.setImage(HBPhotos_select_YES_Icon, for: .selected)
         btn.addTarget(self, action: .rightChooseBtnChick, for: .touchUpInside)
         btn.imageView?.contentMode = .center
         return btn
