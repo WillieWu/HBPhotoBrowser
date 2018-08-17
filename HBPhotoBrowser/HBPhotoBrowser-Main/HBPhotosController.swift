@@ -400,9 +400,9 @@ extension HBCollectionViewCell {
 
 public class photo: NSObject {
     
-    var asset: PHAsset?
+    public var asset: PHAsset?
     /// 是否选中
-    var isSelect: Bool = false
+    public var isSelect: Bool = false
    
 }
 
