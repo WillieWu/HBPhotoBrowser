@@ -403,6 +403,8 @@ public class photo: NSObject {
     public var asset: PHAsset?
     /// 是否选中
     public var isSelect: Bool = false
+    /// 展示删除
+    public var isShowDelete: Bool = false
    
 }
 
