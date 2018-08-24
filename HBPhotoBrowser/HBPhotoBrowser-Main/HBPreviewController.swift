@@ -128,6 +128,7 @@ class HBPreviewController: HBBaseViewController {
             self.title = "\(indexPath.item + 1)" + "/" + "\(self.list.count)"
             
             self.chooseBtn.isSelected = model.isSelect
+            self.chooseBtn.setTitle(self.chooseBtn.isSelected ? "\(model.index)" : "", for: .normal)
 
         }else if model.asset?.mediaType == .video {
             
@@ -205,16 +206,7 @@ class HBPreviewController: HBBaseViewController {
             self.buttonView.starMidBtnAnimation(String(self.tempList.count))
         }
     }
-    /**
-     设置所有按钮状态
-     
-     - parameter result: photo
-     */
-    fileprivate func setChooseBtnStatus(_ result: photo) {
-        
-        self.chooseBtn.isSelected = result.isSelect
-        
-    }
+    
 
     @objc fileprivate func chickChooseBtn() {
         
@@ -223,7 +215,7 @@ class HBPreviewController: HBBaseViewController {
         if !group.model.isSelect && self.checkMaxCount(self.tempList) { return }
         
         group.model.isSelect = !group.model.isSelect
-        
+        group.model.indexPath = group.indexPath
         self.chooseBtn.isSelected = group.model.isSelect
         
         if self.tempList.contains(group.model) {
@@ -232,6 +224,14 @@ class HBPreviewController: HBBaseViewController {
         }else{
             self.tempList.append(group.model)
         }
+        
+        var indexPaths: [IndexPath] = [IndexPath]()
+        
+        for (index, item) in self.tempList.enumerated() {
+            item.index = index + 1
+            indexPaths.append(item.indexPath!)
+        }
+        self.chooseBtn.setTitle(self.chooseBtn.isSelected ? "\(group.model.index)" : "", for: .normal)
         fixButtomState()
         self.previewDelegate?.fixChooseCell(group.indexPath, model: group.model, choosePhotos: self.tempList)
     }
@@ -278,10 +278,12 @@ class HBPreviewController: HBBaseViewController {
     fileprivate lazy var chooseBtn: UIButton = {
     
         let btn = UIButton.init(type: UIButtonType.custom)
-        btn.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
-        btn.setImage(HBPhotos_select_NO_Icon, for: UIControlState())
-        btn.setImage(HBPhotos_select_YES_Icon, for: .selected)
+        btn.frame = CGRect(x: 0, y: 0, width: 25, height: 25)
+        btn.setBackgroundImage(HBPhotos_select_NO_Icon, for: .normal)
+        btn.setBackgroundImage(HBPhotos_select_YES_Icon, for: .selected)
         btn.addTarget(self, action: .rightChooseBtnChick, for: .touchUpInside)
+        btn.setTitleColor(UIColor.white, for: .normal)
+        btn.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         btn.imageView?.contentMode = .center
         return btn
     
@@ -334,7 +336,8 @@ extension HBPreviewController: UICollectionViewDelegate, UICollectionViewDataSou
         
         let result = self.list[index]
         
-        self.setChooseBtnStatus(result)
+        self.chooseBtn.isSelected = result.isSelect
+        self.chooseBtn.setTitle(self.chooseBtn.isSelected ? "\(result.index)" : "", for: .normal)
         
         self.title = "\(index + 1)" + "/" + "\(self.list.count)"
     }
@@ -609,7 +612,7 @@ class HBButtomView: UIView {
         
         self.rightBtn.isEnabled = false
         
-        self.rightBtn.setTitle("确定", for: UIControlState())
+        self.rightBtn.setTitle("确定", for: .normal)
         
     }
     /**
@@ -621,7 +624,7 @@ class HBButtomView: UIView {
         
         self.rightBtn.isEnabled = true
         
-        self.rightBtn.setTitle("确定 (\(title))", for: UIControlState())
+        self.rightBtn.setTitle("确定 (\(title))", for: .normal)
         
         
     }
@@ -665,18 +668,20 @@ class HBButtomView: UIView {
     lazy var leftBtn: HBButton = {
     
         let btn = HBButton()
-        btn.setImage(HBPhotos_select_NO_Icon, for: UIControlState())
+        btn.setImage(HBPhotos_select_NO_Icon, for: .normal)
         btn.setImage(HBPhotos_select_YES_Icon, for: .selected)
-        btn.setTitle("原图", for: UIControlState())
+        btn.setTitle("原图", for: .normal)
+        btn.setTitleColor(HBPhoto_Buttom_Send_Color_Disabled, for: .normal)
+        btn.setTitleColor(HBPhoto_Buttom_Send_Color_Normal, for: .selected)
         return btn
     
     }()
     lazy var rightBtn: UIButton = {
         
         let btn = UIButton()
-        btn.setTitleColor(HBPhoto_Buttom_Send_Color_Normal, for: UIControlState())
+        btn.setTitleColor(HBPhoto_Buttom_Send_Color_Normal, for: .normal)
         btn.setTitleColor(HBPhoto_Buttom_Send_Color_Disabled, for: .disabled)
-        btn.setTitle("确定", for: UIControlState())
+        btn.setTitle("确定", for: .normal)
         btn.addTarget(self, action: .buttomSendChick, for: .touchUpInside)
         btn.isEnabled = false
         return btn
@@ -707,7 +712,7 @@ class HBButton: UIButton {
     
         self.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         self.imageView?.contentMode = .center
-        self.setTitleColor(UIColor ( red: 0.8902, green: 0.8902, blue: 0.8902, alpha: 1.0 ), for: UIControlState())
+        self.setTitleColor(UIColor ( red: 0.8902, green: 0.8902, blue: 0.8902, alpha: 1.0 ), for: .normal)
         self.setTitleColor(UIColor.white, for: .selected)
         self.addTarget(self, action: .customBtnChick, for: .touchUpInside)
     

@@ -74,6 +74,23 @@ class HBPhotosController: HBBaseViewController {
         self.showCancleBtn()
         
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        guard !self.selectPhotos.isEmpty else {
+            return
+        }
+        
+        var indexPaths: [IndexPath] = [IndexPath]()
+        
+        for item in self.selectPhotos {
+    
+            indexPaths.append(item.indexPath!)
+        }
+        
+        self.collectionView.reloadItems(at: indexPaths)
+        
+    }
     fileprivate func addCollection() {
         
         self.view.backgroundColor = UIColor.white
@@ -189,23 +206,31 @@ extension HBPhotosController: UICollectionViewDelegate, UICollectionViewDataSour
         if !model.isSelect && self.checkMaxCount(self.selectPhotos){ return }
         
         model.isSelect = !model.isSelect
+        model.indexPath = indexPath
         chickBtn.isSelected = model.isSelect
         
         if self.selectPhotos.contains(model) {
             
-            self.selectPhotos.remove(at: self.selectPhotos.index(of: model)!)
+            let removeIndex = self.selectPhotos.index(of: model)!
+            self.selectPhotos.remove(at: removeIndex)
+            self.collectionView.reloadItems(at: [model.indexPath!])
             
         }else{
             
             chickBtn.hb_starBoundsAnimation()
-            
             self.selectPhotos.append(model)
         }
-        if self.selectPhotos.count == 0 {
-            self.buttonView.stopMidBtnAnimation()
-        }else{
-            self.buttonView.starMidBtnAnimation(String(self.selectPhotos.count))
+        var indexPaths: [IndexPath] = [IndexPath]()
+        
+        for (index, item) in self.selectPhotos.enumerated() {
+            item.index = index + 1
+            indexPaths.append(item.indexPath!)
         }
+        
+        self.collectionView.reloadItems(at: indexPaths)
+        
+        self.selectPhotos.isEmpty ? self.buttonView.stopMidBtnAnimation() : self.buttonView.starMidBtnAnimation(String(self.selectPhotos.count))
+        
         
     }
     //MARK: HBButtomViewDelegate
@@ -262,7 +287,7 @@ class HBCollectionViewCell: UICollectionViewCell {
                     self.imageView.image = image
                 
             })
-            self.chooseBtn.isSelected = (model?.isSelect)!
+            p_setChooseButtonState(model!)
             
             if model?.asset?.mediaType == .image {
                 
@@ -349,9 +374,12 @@ class HBCollectionViewCell: UICollectionViewCell {
     fileprivate lazy var chooseBtn: UIButton = {
         
         let btn = UIButton()
-        btn.setImage(HBPhotos_select_NO_Icon, for: UIControlState())
-        btn.setImage(HBPhotos_select_YES_Icon, for: .selected)
+        btn.setBackgroundImage(HBPhotos_select_NO_Icon, for: .normal)
+        btn.setBackgroundImage(HBPhotos_select_YES_Icon, for: .selected)
+        
         btn.addTarget(self, action: .chooseBtnChick, for: .touchUpInside)
+        btn.setTitleColor(UIColor.white, for: .selected)
+        btn.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         btn.imageView?.contentMode = .center
         
         return btn
@@ -396,6 +424,10 @@ extension HBCollectionViewCell {
                 color_a(r: 0, g: 0, b: 0, a: 0.0).cgColor,
                 color_a(r: 0, g: 0, b: 0, a: 0.0).cgColor]
     }
+    fileprivate func p_setChooseButtonState(_ model: photo) {
+        self.chooseBtn.isSelected = model.isSelect
+        self.chooseBtn.isSelected ? self.chooseBtn.setTitle("\(model.index)", for: .normal) : self.chooseBtn.setTitle("", for: .normal)
+    }
 }
 
 public class photo: NSObject {
@@ -405,6 +437,11 @@ public class photo: NSObject {
     public var isSelect: Bool = false
     /// 展示删除
     public var isShowDelete: Bool = false
+    /// 索引
+    public var index: Int = 0
+    
+    public var indexPath: IndexPath?
+    
    
 }
 
