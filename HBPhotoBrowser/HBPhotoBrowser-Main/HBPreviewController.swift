@@ -669,7 +669,7 @@ class HBButtomView: UIView {
     
         let btn = HBButton()
         btn.setImage(HBPhotos_select_NO_Icon, for: .normal)
-        btn.setImage(HBPhotos_select_YES_Icon, for: .selected)
+        btn.setImage(HBPhotos_select_sure_YES_Icon, for: .selected)
         btn.setTitle("原图", for: .normal)
         btn.setTitleColor(HBPhoto_Buttom_Send_Color_Disabled, for: .normal)
         btn.setTitleColor(HBPhoto_Buttom_Send_Color_Normal, for: .selected)

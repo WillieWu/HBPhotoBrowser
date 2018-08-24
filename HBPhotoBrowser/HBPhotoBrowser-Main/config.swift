@@ -66,6 +66,7 @@ public let HBPhotoCollectionsTableViewCell_SubtitleFont = UIFont.systemFont(ofSi
 //MARK: 照片缩略图界面
 public let HBPhotos_select_YES_Icon = UIImage.whb_imageName(name: "select_Yes@2x.png")
 public let HBPhotos_select_NO_Icon = UIImage.whb_imageName(name: "select_No@2x.png")
+public let HBPhotos_select_sure_YES_Icon = UIImage.whb_imageName(name: "sure_select_Yes@2x.png")
 public let HBPhotos_padding: CGFloat = 2.0
 public let HBPhotos_line: CGFloat = UIScreen.main.bounds.size.width > 375 ? 5 : 4
 
