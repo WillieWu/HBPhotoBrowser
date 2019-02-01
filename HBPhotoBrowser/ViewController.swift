@@ -19,8 +19,7 @@ class ViewController: UIViewController {
     @IBAction func goSelectPhotos(_ sender: UIButton) {
     
         let rootVc = HBPhotoBrowser(delegate: self)
-        rootVc.maxPhotos = 3
-
+        rootVc.maxCount = 3
         let navBrowser = HBNavgationBrowser(rootViewController: rootVc)
     
         self.present(navBrowser, animated: true, completion: nil)

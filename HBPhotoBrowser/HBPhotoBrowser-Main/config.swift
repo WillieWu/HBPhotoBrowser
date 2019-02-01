@@ -85,7 +85,15 @@ func color_a(r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat) -> UIColor {
     return UIColor(red: r/255.0, green: g/255.0, blue: b/255.0, alpha: a)
 }
 
+var kHBMaxCount: Int = 9
+var kHBIsMaxCount: Bool = false
+var kHBCanChoiceType: HBMeidaType = .default
 
+func p_resetDefault() {
+    kHBMaxCount = 9
+    kHBIsMaxCount = false
+    kHBCanChoiceType = .default
+}
 
 extension String {
     
@@ -219,21 +227,6 @@ extension UIView {
         }
     
     }
-    
-    
-    func hb_starBoundsAnimation() {
-        
-        self.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
-        
-        UIView.animate(withDuration: 0.25, animations: {
-            self.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
-        }, completion: { (Finished) in
-            UIView.animate(withDuration: 0.15, animations: {
-                self.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
-            })
-        })
-    }
-    
     
 }
 

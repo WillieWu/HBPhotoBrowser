@@ -21,7 +21,7 @@ private extension Selector {
 
 protocol HBPreviewControllerDelegate: NSObjectProtocol {
     
-    func fixChooseCell(_ indexPath: IndexPath, model: photo, choosePhotos: [photo])
+    func fixChooseCell(_ model: photo, choosePhotos: [photo])
     
 }
 
@@ -208,14 +208,20 @@ class HBPreviewController: HBBaseViewController {
     }
     
 
-    @objc fileprivate func chickChooseBtn() {
-        
+    @objc fileprivate func chickChooseBtn(_ btn: UIButton) {
+    
         let group = getVisibleCell()
-        
-        if !group.model.isSelect && self.checkMaxCount(self.tempList) { return }
-        
+        guard !kHBIsMaxCount || group.model.isSelect  else {
+            let alterVc = UIAlertController(title: nil, message: "已达最多选择数，请取消后重新选择", preferredStyle: .alert)
+            let cancleAction = UIAlertAction(title: "确定", style: .cancel) { (action) in
+                print(action.title ?? "标题")
+            }
+            alterVc.addAction(cancleAction)
+            self.present(alterVc, animated: true, completion: nil)
+            return
+        }
         group.model.isSelect = !group.model.isSelect
-        group.model.indexPath = group.indexPath
+//        group.model.indexPath = group.indexPath
         self.chooseBtn.isSelected = group.model.isSelect
         
         if self.tempList.contains(group.model) {
@@ -224,16 +230,13 @@ class HBPreviewController: HBBaseViewController {
         }else{
             self.tempList.append(group.model)
         }
-        
-        var indexPaths: [IndexPath] = [IndexPath]()
-        
         for (index, item) in self.tempList.enumerated() {
             item.index = index + 1
-            indexPaths.append(item.indexPath!)
         }
+
         self.chooseBtn.setTitle(self.chooseBtn.isSelected ? "\(group.model.index)" : "", for: .normal)
         fixButtomState()
-        self.previewDelegate?.fixChooseCell(group.indexPath, model: group.model, choosePhotos: self.tempList)
+        self.previewDelegate?.fixChooseCell(group.model, choosePhotos: self.tempList)
     }
     
     @objc fileprivate func playBtnChick() {
