@@ -422,6 +422,6 @@ public class photo: NSObject {
 //    var indexPath: IndexPath?
     
     var isEnable: Bool = true
-    
+    //TODO: @whb 删除不需要的属性
 }
 
