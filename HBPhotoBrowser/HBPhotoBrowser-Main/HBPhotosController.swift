@@ -66,31 +66,11 @@ class HBPhotosController: HBBaseViewController {
     }
     
     override func viewDidLoad() {
-        
         super.viewDidLoad()
-        
         addCollection()
-    
         self.showCancleBtn()
-        
     }
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//        
-//        guard !self.selectPhotos.isEmpty else {
-//            return
-//        }
-//        
-//        var indexPaths: [IndexPath] = [IndexPath]()
-//        
-//        for item in self.selectPhotos {
-//    
-//            indexPaths.append(item.indexPath!)
-//        }
-//        
-//        self.collectionView.reloadItems(at: indexPaths)
-//        
-//    }
+
     fileprivate func addCollection() {
         
         self.view.backgroundColor = UIColor.white
@@ -198,7 +178,6 @@ extension HBPhotosController: UICollectionViewDelegate, UICollectionViewDataSour
     func collectionViewChickStateBtn(_ cell: HBCollectionViewCell, model: photo, indexPath: IndexPath, chickBtn: UIButton) {
         
         model.isSelect = !model.isSelect
-//        model.indexPath = indexPath
         chickBtn.isSelected = model.isSelect
         
         if self.selectPhotos.contains(model) {
@@ -232,7 +211,6 @@ extension HBPhotosController: UICollectionViewDelegate, UICollectionViewDataSour
     }
     //MARK: HBPreviewControllerDelegate
     func fixChooseCell(_ model: photo, choosePhotos: [photo]) {
-//        self.photos[indexPath.row] = model
         self.selectPhotos = choosePhotos
         kHBCanChoiceType = self.selectPhotos.first?.asset?.mediaType == .video ? .video : .image
         kHBIsMaxCount = self.selectPhotos.count == kHBMaxCount
@@ -410,18 +388,14 @@ extension HBCollectionViewCell {
 }
 
 public class photo: NSObject {
-    
     public var asset: PHAsset?
     /// 是否选中
-    var isSelect: Bool = false
+    public var isSelect: Bool = false
     /// 展示删除
-    var isShowDelete: Bool = false
+    public var isShowDelete: Bool = false
     /// 索引
-    var index: Int = 0
-    
-//    var indexPath: IndexPath?
+    public var index: Int = 0
     
     var isEnable: Bool = true
-    //TODO: @whb 删除不需要的属性
 }
 

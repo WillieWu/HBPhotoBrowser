@@ -285,9 +285,6 @@ public class HBBaseViewController: UIViewController {
     
     override public func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        
     }
     
     func showCancleBtn() {

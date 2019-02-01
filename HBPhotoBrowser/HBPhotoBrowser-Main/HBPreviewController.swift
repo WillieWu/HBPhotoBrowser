@@ -81,11 +81,6 @@ class HBPreviewController: HBBaseViewController {
         } else {
             buttonView.frame = CGRect(x: 0, y: self.view.hb_H - 44, width: self.view.hb_W, height: 44)
         }
-
-//        if !self.navigationController!.navigationBar.isTranslucent {
-//            self.collectionView.hb_Y = -64
-//        }
-//        
         
     }
     override func viewWillDisappear(_ animated: Bool) {
@@ -221,7 +216,6 @@ class HBPreviewController: HBBaseViewController {
             return
         }
         group.model.isSelect = !group.model.isSelect
-//        group.model.indexPath = group.indexPath
         self.chooseBtn.isSelected = group.model.isSelect
         
         if self.tempList.contains(group.model) {
