@@ -12,7 +12,7 @@ extension UIImage {
     
     class func whb_imageName(name: String) -> UIImage {
         
-        let currentBundlePath = Bundle(for: HBPhotoBrowser.self).path(forResource: "HBPhotoBrowser", ofType: "bundle")
+        let currentBundlePath = Bundle(for: HBGroupPhotoListController.self).path(forResource: "HBPhotoBrowser", ofType: "bundle")
         
         guard let _ = currentBundlePath else {
             print(#file + "获取currentBundlePath 失败: \(String(describing: currentBundlePath))")

@@ -21,7 +21,7 @@ private extension Selector {
 
 protocol HBPreviewControllerDelegate: NSObjectProtocol {
     
-    func fixChooseCell(_ model: photo, choosePhotos: [photo])
+    func fixChooseCell(_ model: HBMediaItem, choosePhotos: [HBMediaItem])
     
 }
 
@@ -38,7 +38,7 @@ class HBPreviewController: HBBaseViewController {
     var timeObserverToken: Any?
     
     /// 视频数据
-    var videoModel: photo?
+    var videoModel: HBMediaItem?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -104,7 +104,7 @@ class HBPreviewController: HBBaseViewController {
      - parameter assetResult: 结果集
      - parameter indexPath:   选中IndexPath
      */
-    func selectItem(_ photos: [photo], indexPath: IndexPath, choosePhotos: [photo]) {
+    func selectItem(_ photos: [HBMediaItem], indexPath: IndexPath, choosePhotos: [HBMediaItem]) {
         
         let model = photos[indexPath.item]
         
@@ -184,7 +184,7 @@ class HBPreviewController: HBBaseViewController {
      
      - returns: 目标cell
      */
-    fileprivate func getVisibleCell() -> (cell: HBPreviewCollectionCell, indexPath: IndexPath, model: photo) {
+    fileprivate func getVisibleCell() -> (cell: HBPreviewCollectionCell, indexPath: IndexPath, model: HBMediaItem) {
         let cell = self.collectionView.visibleCells.first as! HBPreviewCollectionCell
         let indexPath = self.collectionView.indexPath(for: cell)
         let model = self.list[(indexPath?.item)!]
@@ -263,13 +263,13 @@ class HBPreviewController: HBBaseViewController {
         return collectionView
     
     }()
-    fileprivate lazy var list: [photo] = {
-        let list = [photo]()
+    fileprivate lazy var list: [HBMediaItem] = {
+        let list = [HBMediaItem]()
         return list
     }()
-    fileprivate lazy var tempList: [photo] = {
+    fileprivate lazy var tempList: [HBMediaItem] = {
     
-        let tempList = [photo]()
+        let tempList = [HBMediaItem]()
         return tempList
     }()
     fileprivate lazy var chooseBtn: UIButton = {

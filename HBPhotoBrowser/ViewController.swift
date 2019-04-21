@@ -14,35 +14,24 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        let label = (JPFPSStatus.sharedInstance()?.fpsLabel)!
+        UIApplication.shared.keyWindow?.addSubview(label)
     }
-
+    
+    var browser: HBPhotoBrowser?
     @IBAction func goSelectPhotos(_ sender: UIButton) {
-    
-        let rootVc = HBPhotoBrowser(delegate: self)
-        rootVc.maxCount = 3
-        let navBrowser = HBNavgationBrowser(rootViewController: rootVc)
-    
-        self.present(navBrowser, animated: true, completion: nil)
-        
-        
+        self.browser = HBPhotoBrowser(self)
+        self.browser?.maxCount = 4
+        self.browser?.didMaxCount = { (count) in
+            print(count)
+        }
+        self.browser?.didSelectVideo = { (item) in
+            print(item)
+        }
+        self.browser?.didSelectPhotos = { (isOrigin, items) in
+            print("\(isOrigin), \(items)")
+        }
+        self.browser?.show()
     }
     
-}
-
-extension ViewController: HBBaseViewControllerDelegate {
-    
-    func baseViewController(_ baseVc: HBBaseViewController, didPickPhotos photos: [photo], isOriginImage: Bool) {
-        print("一共选取\(photos.count)张图片, 是否原图: \(isOriginImage)")
-
-    }
-   
-    func baseViewController(_ baseVc: HBBaseViewController, didPickVideo video: photo) {
-        print("选取视频：\(video)")
-        
-    }
-    
-    func baseViewController(_ baseVc: HBBaseViewController, didMaxCount maxCount: Int) {
-        print("最多选择\(maxCount)张照片")
-    }
-   
 }

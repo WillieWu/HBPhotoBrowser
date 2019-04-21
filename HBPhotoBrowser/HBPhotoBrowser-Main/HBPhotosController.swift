@@ -34,7 +34,7 @@ class HBPhotosController: HBBaseViewController {
                 
                 fetchResult.enumerateObjects({ (asset, index, stop) in
                     
-                    let model = photo()
+                    let model = HBMediaItem()
                     
                     model.asset = asset
                     
@@ -108,8 +108,8 @@ class HBPhotosController: HBBaseViewController {
     
     }()
     
-    fileprivate lazy var photos: [photo] = {
-        let array = [photo]()
+    fileprivate lazy var photos: [HBMediaItem] = {
+        let array = [HBMediaItem]()
         return array
     }()
     fileprivate var buttonView: HBButtomView = {
@@ -118,8 +118,8 @@ class HBPhotosController: HBBaseViewController {
         buttonView.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         return buttonView
     }()
-    fileprivate var selectPhotos: [photo] = {
-        let photos = [photo]()
+    fileprivate var selectPhotos: [HBMediaItem] = {
+        let photos = [HBMediaItem]()
         return photos
     }()
     deinit {
@@ -175,7 +175,7 @@ extension HBPhotosController: UICollectionViewDelegate, UICollectionViewDataSour
         return UIEdgeInsetsMake(HBPhotos_padding, HBPhotos_padding, HBPhotos_padding, HBPhotos_padding)
     }
     //MARK: HBCollectionViewCellDelegate
-    func collectionViewChickStateBtn(_ cell: HBCollectionViewCell, model: photo, indexPath: IndexPath, chickBtn: UIButton) {
+    func collectionViewChickStateBtn(_ cell: HBCollectionViewCell, model: HBMediaItem, indexPath: IndexPath, chickBtn: UIButton) {
         
         model.isSelect = !model.isSelect
         chickBtn.isSelected = model.isSelect
@@ -210,7 +210,7 @@ extension HBPhotosController: UICollectionViewDelegate, UICollectionViewDataSour
         }
     }
     //MARK: HBPreviewControllerDelegate
-    func fixChooseCell(_ model: photo, choosePhotos: [photo]) {
+    func fixChooseCell(_ model: HBMediaItem, choosePhotos: [HBMediaItem]) {
         self.selectPhotos = choosePhotos
         kHBCanChoiceType = self.selectPhotos.first?.asset?.mediaType == .video ? .video : .image
         kHBIsMaxCount = self.selectPhotos.count == kHBMaxCount
@@ -221,7 +221,7 @@ extension HBPhotosController: UICollectionViewDelegate, UICollectionViewDataSour
 }
 
 protocol HBCollectionViewCellDelegate: NSObjectProtocol {
-    func collectionViewChickStateBtn(_ cell: HBCollectionViewCell, model: photo, indexPath: IndexPath, chickBtn: UIButton)
+    func collectionViewChickStateBtn(_ cell: HBCollectionViewCell, model: HBMediaItem, indexPath: IndexPath, chickBtn: UIButton)
 }
 
 class HBCollectionViewCell: UICollectionViewCell {
@@ -235,7 +235,7 @@ class HBCollectionViewCell: UICollectionViewCell {
     }()
     weak var delegate: HBCollectionViewCellDelegate?
     var indexPath: IndexPath?
-    weak var model:photo? {
+    weak var model:HBMediaItem? {
         didSet {
             guard model != nil else { return }
             let requestOptions = PHImageRequestOptions()
@@ -372,7 +372,7 @@ extension HBCollectionViewCell {
                 color_a(r: 0, g: 0, b: 0, a: 0.0).cgColor,
                 color_a(r: 0, g: 0, b: 0, a: 0.0).cgColor]
     }
-    fileprivate func p_setChooseButtonState(_ model: photo) {
+    fileprivate func p_setChooseButtonState(_ model: HBMediaItem) {
         self.chooseBtn.isSelected = model.isSelect
         self.chooseBtn.isSelected ? self.chooseBtn.setTitle("\(model.index)", for: .normal) : self.chooseBtn.setTitle("", for: .normal)
     }
@@ -387,7 +387,7 @@ extension HBCollectionViewCell {
     }
 }
 
-public class photo: NSObject {
+public class HBMediaItem: NSObject {
     public var asset: PHAsset?
     /// 是否选中
     public var isSelect: Bool = false
