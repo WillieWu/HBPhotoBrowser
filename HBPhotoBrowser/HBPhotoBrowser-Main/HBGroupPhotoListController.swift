@@ -293,10 +293,7 @@ public class HBBaseViewController: UIViewController {
     }
     
     func cancle() {
-        
         self.delegate?.baseViewcontroller?(didCancle: self)
-        self.dismiss(animated: true, completion: nil)
-        
     }
     override public var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent

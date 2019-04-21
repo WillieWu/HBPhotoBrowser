@@ -34,6 +34,10 @@ public class HBPhotoBrowser: NSObject {
 }
 
 extension HBPhotoBrowser: HBBaseViewControllerDelegate {
+    public func baseViewcontroller(didCancle baseVc: HBBaseViewController) {
+        baseVc.dismiss(animated: true, completion: nil)
+    }
+    
     public func baseViewController(_ baseVc: HBBaseViewController, didPickPhotos photos: [HBMediaItem], isOriginImage: Bool) {
         self.didSelectPhotos?(isOriginImage, photos)
         
