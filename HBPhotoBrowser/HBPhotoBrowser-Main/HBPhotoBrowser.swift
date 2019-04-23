@@ -21,13 +21,13 @@ public class HBPhotoBrowser: NSObject {
     public var didMaxCount: ((_ count: Int) -> ())?
     
     public var maxCount: Int = 9
-    public var shouldEdit:Bool = false
+    //TODO: @whb 后期增加图片剪裁功能
+//    public var shouldEdit:Bool = false
     
     public func show() {
         let rootVc = HBGroupPhotoListController(delegate: self)
         rootVc.maxCount = self.maxCount
-        //TODO: @whb 通过这个判断选择的图片是否需要编辑。增加图片编辑功能
-        rootVc.shouldEdit = self.shouldEdit
+//        rootVc.shouldEdit = self.shouldEdit
         let navBrowser = HBNavgationBrowser(rootViewController: rootVc)
         self.presentVc.present(navBrowser, animated: true, completion: nil)
     }
