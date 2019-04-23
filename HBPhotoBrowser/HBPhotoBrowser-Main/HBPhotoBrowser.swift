@@ -10,7 +10,7 @@ import UIKit
 import Photos
 
 public class HBPhotoBrowser: NSObject {
-    convenience init(_ presentVC: UIViewController) {
+    public convenience init(_ presentVC: UIViewController) {
         self.init()
         self.presentVc = presentVC
     }
