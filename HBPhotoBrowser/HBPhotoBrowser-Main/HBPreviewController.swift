@@ -9,7 +9,7 @@
 import UIKit
 import Photos
 
-let previewPadding = 1.0
+let HBPreviewPadding = 8 // 图片之间的间隙= 8 * 2
 
 private extension Selector {
     static let rightChooseBtnChick = #selector(HBPreviewController.chickChooseBtn)
@@ -24,9 +24,6 @@ protocol HBPreviewControllerDelegate: NSObjectProtocol {
     func fixChooseCell(_ model: HBMediaItem, choosePhotos: [HBMediaItem])
     
 }
-
-//FIXME: 1.翻页增加间距
-//FIXME: 2.翻页预览下一张，以免频幕会闪一下
 
 class HBPreviewController: HBBaseViewController {
     
@@ -70,8 +67,8 @@ class HBPreviewController: HBBaseViewController {
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
-        self.collectionView.frame = self.view.bounds
+        self.collectionView.frame = CGRect(origin: CGPoint(x: -HBPreviewPadding, y: 0),
+                                           size: CGSize(width: UIScreen.main.bounds.size.width + CGFloat(2 * HBPreviewPadding), height: UIScreen.main.bounds.size.height))
         self.playView.hb_W = 64
         self.playView.hb_H = 64
         self.playView.hb_center = self.view.center
@@ -305,7 +302,6 @@ class HBPreviewController: HBBaseViewController {
 extension HBPreviewController: UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout, HBPreviewCollectionCellDelegate,HBButtomViewDelegate {
      //#MARK: UICollectionViewDelegate, UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    
         return self.list.count
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -313,18 +309,17 @@ extension HBPreviewController: UICollectionViewDelegate, UICollectionViewDataSou
         let result = self.list[indexPath.item] 
         cell.addPreview(fillImage: result.asset!)
         cell.delegate = self
- 
         return cell
     }
      //#MARK: UICollectionViewDelegateFlowLayout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: self.view.hb_W - CGFloat(previewPadding * 2), height: self.view.hb_H)
+        return CGSize(width: self.view.hb_W, height: self.view.hb_H)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return CGFloat(previewPadding * 2)
+        return CGFloat(HBPreviewPadding) * 2
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: CGFloat(previewPadding), bottom: 0, right: CGFloat(previewPadding))
+        return UIEdgeInsets(top: 0, left: CGFloat(HBPreviewPadding), bottom: 0, right: CGFloat(HBPreviewPadding))
     }
     //MARK: UIScrollerViewDelegate
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
