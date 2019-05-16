@@ -18,7 +18,7 @@
 ![目录](http://upload-images.jianshu.io/upload_images/620797-47dcd1e484fcca95.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 
-##一、cocoapods安装
+##1.cocoapods安装
 
 1.Podfile内容
 
@@ -39,80 +39,26 @@
 
 	import whb_HBPhotoBrowser
 
-##二、文件导入
-
-###1.导入所需文件
-导入`<Photos.framework >`与`HBPhotoBrowser-Main`
-
 ###2.使用
+---
+
 实例化***`HBPhotoBrowser`***
 
-		//实例化，设置代理<HBBaseViewControllerDelegate>
-		let rootVc = HBPhotoBrowser(delegate: self)
-		//最大可选择数量(默认最大可选9张)
-        rootVc.maxPhotos = 3
-        
-        let navBrowser = HBNavgationBrowser(rootViewController: rootVc)
-    
-        self.presentViewController(navBrowser, animated: true, completion: nil)
+		var browser: HBPhotoBrowser? //声明变量
+		self.browser = HBPhotoBrowser(self)
+      	self.browser?.maxCount = 4
+        self.browser?.didMaxCount = { (count) in
+            print(count)
+        }
+        self.browser?.didSelectVideo = { (item) in
+            print(item)
+        }
+        self.browser?.didSelectPhotos = { (isOrigin, items) in
+            print("\(isOrigin), \(items)")
+        }
+        self.browser?.show()
 
 	
-***`HBBaseViewControllerDelegate`***方法
-
-	@objc protocol HBBaseViewControllerDelegate: NSObjectProtocol {
-	
-    /**
-     选取的所有图片
-     
-     - parameter baseVc: baseVc
-     - parameter photos: [photo]
-     */
-    optional func baseViewController(baseVc: HBBaseViewController, didPickPhotos photos: [photo])
-    /**
-     取消，返回到根视图
-     
-     - parameter baseVc: baseVc
-     */
-    optional func baseViewcontroller(didCancle baseVc: HBBaseViewController)
-    /**
-     选取图片到达上限
-     
-     - parameter baseVc: baseVc
-     */
-    optional func baseViewController(baseVc: HBBaseViewController, didMaxCount maxCount: Int)
-    
-	}
-
-实现***`HBBaseViewControllerDelegate`***方法
-
-```
-
-	extension ViewController: HBBaseViewControllerDelegate {
-    
-    func baseViewcontroller(didCancle baseVc: HBBaseViewController) {
-        print("取消 - 我要回老家了")
-        baseVc.dismissViewControllerAnimated(true, completion: nil)
-    
-    }
-    
-    func baseViewController(baseVc: HBBaseViewController, didPickPhotos photos: [photo]) {
-        print("一共选取" + String(photos.count) + "张图片")
-        baseVc.dismissViewControllerAnimated(true, completion: nil)
-       
-    }
-    
-    func baseViewController(baseVc: HBBaseViewController, didMaxCount maxCount: Int) {
-        
-        let errorMessage = "小兄弟，最多选择" + String(maxCount) + "张"
-        
-        let alter = UIAlertView(title: nil, message: errorMessage, delegate: nil, cancelButtonTitle: "确定")
-        alter.show()
-    
-   	 }
- }
- 
-
- ```	
  
 ***关于`<Photos.framework >`更多的介绍***
 
