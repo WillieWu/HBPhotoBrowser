@@ -44,8 +44,8 @@
 
 实例化***`HBPhotoBrowser`***
 
-		var browser: HBPhotoBrowser? //声明变量
-		self.browser = HBPhotoBrowser(self)
+	var browser: HBPhotoBrowser? //声明变量
+	self.browser = HBPhotoBrowser(self)
       	self.browser?.maxCount = 4
         self.browser?.didMaxCount = { (count) in
             print(count)
